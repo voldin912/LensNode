@@ -9,6 +9,8 @@ const QUERY_PROFILE_BY_ID = gql`
       id
       name
       metadata
+      handle
+      bio
       stats {
         totalFollowers
         totalFollowing
@@ -32,6 +34,27 @@ const QUERY_PROFILE_BY_ID = gql`
           }
         }
         __typename
+      }
+      coverPicture {
+        ... on NftImage {
+          contractAddress
+          tokenId
+          uri
+          verified
+        }
+        ... on MediaSet {
+          original {
+            url
+            mimeType
+          }
+        }
+        __typename
+      }
+      attributes {
+        displayType
+        traitType
+        key
+        value
       }
     }
   }

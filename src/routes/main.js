@@ -9,14 +9,13 @@ router.get('', async (req, res) => {
 router.get('/profile/:name', async (req, res) => { 
 	let name = req.params.name;
 	let handleName = name + '.lens'
-
 	const data = await getProfile(handleName);
-  const profData = JSON.stringify(data, undefined, 2);
-  
-  //Logging data that it is there
-  console.log(profData);
+  //const profData = JSON.stringify(data, undefined, 2);
 
-  res.render('profile')
+  //Logging data that it is there
+  //console.log(profData);
+
+  res.render('profile', { user: data.profile })
 })
 
 module.exports = router;
