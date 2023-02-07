@@ -10,11 +10,11 @@ router.get('/profile/:name', async (req, res) => {
 	let name = req.params.name;
 	let handleName = name + '.lens'
 
-  const data = await getProfile(handleName);
+  let data = await getProfile(handleName);
 
-  data.profile = getCleanedProfile(data.profile);
+  let profileData = getCleanedProfile(data.profile);
 
-  res.render('profile', { user: data.profile })
+  res.render('profile', { user: profileData })
 })
 
 module.exports = router;

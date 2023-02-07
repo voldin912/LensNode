@@ -1,27 +1,28 @@
 const IPFS_GATEWAY = 'https://gateway.ipfscdn.io/ipfs/'
 
-const getCleanedProfile = async (profile) => {
-
+const getCleanedProfile = (profile) => {
     let cleanedProfile = { ...profile };
     cleanedProfile = replaceIpfs(cleanedProfile);
     return cleanedProfile;
 }
 
 const replaceIpfs = (obj) => {
-    Object.keys(obj).forEach(key => {
-        if (obj[key] !== null) {
-            if (typeof obj[key] === 'object') {
-                replaceIpfs(obj[key])
-            } else {
-                if(obj[key] && typeof obj[key] === 'string') {
-                    obj[key] = (obj[key])
-                    .replace('https://ipfs.io/ipfs/', IPFS_GATEWAY)
-                    .replace('ipfs://', IPFS_GATEWAY);
-                }
-            }
+    const copy = {};
+    for (const key of Object.keys(obj)) {
+        const value = obj[key];
+        const type = typeof value;
+        if (type === "string") {
+            copy[key] = value                
+                .replace(/^Qm[1-9A-Za-z]{44}/gm, `${IPFS_GATEWAY}`)
+                .replace('https://ipfs.io/ipfs/', IPFS_GATEWAY)
+                .replace('ipfs://', IPFS_GATEWAY);
+        } else if (type === "object" && value) {
+            copy[key] = replaceIpfs(value);
+        } else {
+            copy[key] = value;
         }
-    });
-    return obj;
-}
+    }
+    return copy;
+};
 
 module.exports = { getCleanedProfile };
