@@ -10,8 +10,13 @@ router.get('/profile/:name', async (req, res) => {
 	let name = req.params.name;
 	let handleName = name + '.lens'
 	let data = await getProfile(handleName);
-	let profileData = getCleanedProfile(data.profile);
-	res.render('profile', { user: profileData })
+	if(data && data.profile){
+		let profileData = getCleanedProfile(data.profile);
+		res.render('profile', { user: profileData })
+	} else { 
+		res.status(404).render('common/404');
+	}
+	
 })
 
 router.use(async (req, res) => { 
