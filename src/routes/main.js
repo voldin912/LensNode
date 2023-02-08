@@ -18,6 +18,10 @@ router.get('/profile/:name', async (req, res) => {
 	}
 })
 
+router.get('/notifications', async (req, res) => { 
+	res.render('notifications')
+})
+
 router.use(async (req, res) => { 
 	res.status(404).render('common/404');
 })
