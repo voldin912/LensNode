@@ -12,7 +12,7 @@
                         </div>
                     </div>
                     <div class="profile-banner-wrapper">
-                        <% if(user.coverPicture.original.url){ %>
+                        <% if(user.coverPicture?.original?.url){ %>
                             <img src="<%- user.coverPicture.original.url %>" alt="<%- user.name %>">
                         <% }else{ %>
                             <img src="https://i.imgur.com/CAFy1oY.jpg" alt="<%- user.name %>">
@@ -22,7 +22,7 @@
                         <div class="profile-options">
                             <div class="profile-image-wrapper">
                                 <!--https://github.com/lensterxyz/lenster/blob/88e151739dab2acb47f77398698e5d3193aa978f/apps/api/src/lib/getIPFSLink.ts -->
-                                <% if(user.picture.original.url){ %>
+                                <% if(user.picture?.original?.url){ %>
                                     <img src="<%- user.picture.original.url %>" alt="<%- user.name %>"><% 
                                 }else{ %>
                                     <img src="https://i.imgur.com/iV7Sdgm.jpg" alt="<%- user.name %>">
@@ -74,8 +74,8 @@
                             </div>
                         </div>
                         <div class="profile-social-box">
-                            <div><p class="follow-num"> <%- user.stats.totalFollowing %> </p><p class="follow-text"> Following </p></div>
-                            <div><p class="follow-num"> <%- user.stats.totalFollowers %> </p><p class="follow-text"> Followers </p></div>
+                            <div><p class="follow-num"> <%- user.stats?.totalFollowing %> </p><p class="follow-text"> Following </p></div>
+                            <div><p class="follow-num"> <%- user.stats?.totalFollowers %> </p><p class="follow-text"> Followers </p></div>
                         </div>
                     </div>
                     <div class="profile-nav-menu">
