@@ -1,5 +1,12 @@
 const IPFS_GATEWAY = 'https://gateway.ipfscdn.io/ipfs/'
 
+const createURL = (urlString) => {
+    if (!/^https?:\/\//i.test(urlString)) {
+        urlString = 'http://' + urlString;
+    }
+    return new URL(urlString);
+}
+
 const getCleanedProfile = (profile) => {
     let cleanedProfile = { ...profile };
     cleanedProfile = replaceIpfs(cleanedProfile);
@@ -8,8 +15,8 @@ const getCleanedProfile = (profile) => {
     return {
         ...cleanedProfile,
         location: attributes?.find((atr)=> { return atr.key === 'location'})?.value,
-        website: attributes?.find((atr)=> { return atr.key === 'website'})?.value ? new URL(attributes?.find((atr)=> { return atr.key === 'website'}).value).hostname: null,
-        websiteAddress: attributes?.find((atr)=> { return atr.key === 'website'})?.value ? attributes?.find((atr)=> { return atr.key === 'website'}).value: null,
+        website: attributes?.find((atr)=> { return atr.key === 'website'})?.value ? createURL(attributes?.find((atr)=> { return atr.key === 'website'}).value).hostname: null,
+        websiteAddress: attributes?.find((atr)=> { return atr.key === 'website'})?.value ? createURL(attributes?.find((atr)=> { return atr.key === 'website'}).value): null,
         dateJoined: attributes?.find((atr)=> { return atr.key === 'dateJoined'})?.value
     }
 }
