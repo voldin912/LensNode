@@ -1,0 +1,24 @@
+<%- include('./common/header') %>
+<div id="root">
+    <div class="body-wrap">
+        <main class="main">
+            <div class="middle-section ms-width">
+                <div class="Home-wrapper">
+                    <%- include('./common/topnav') %>
+                    <div class="post-header-wrapper back_sec"><div class="back_btn"><span class="middle-header-content"> Notifications</span></div></div>
+                    <div class="explore-nav-menu">
+                        <div class="explore-nav-item activeTab posts_tab">All</div>
+                        <div class="explore-nav-item replies_tab">Mentions</div>
+                        <div class="explore-nav-item media_tab">Likes</div>
+                        <div class="explore-nav-item collected_tab">Comments</div>
+                        <div class="explore-nav-item nftsposts_tab">Collects</div>
+                    </div>
+                    
+                </div>
+            </div>
+            <%- include('./common/rnav') %>
+        </main>
+        <%- include('./common/lnav') %>
+    </div>
+</div>
+<%- include('./common/footer') %>
