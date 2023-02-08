@@ -3,7 +3,14 @@ const IPFS_GATEWAY = 'https://gateway.ipfscdn.io/ipfs/'
 const getCleanedProfile = (profile) => {
     let cleanedProfile = { ...profile };
     cleanedProfile = replaceIpfs(cleanedProfile);
-    return cleanedProfile;
+    let attributes = Object.entries(cleanedProfile.attributes).map(([_, value]) => value);
+
+    return {
+        ...cleanedProfile,
+        location: attributes?.find((atr)=> { return atr.key === 'location'})?.value,
+        website: attributes?.find((atr)=> { return atr.key === 'website'})?.value,
+        dateJoined: attributes?.find((atr)=> { return atr.key === 'dateJoined'})?.value
+    }
 }
 
 const replaceIpfs = (obj) => {
