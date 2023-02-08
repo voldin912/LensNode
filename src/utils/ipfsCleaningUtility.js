@@ -8,7 +8,7 @@ const getCleanedProfile = (profile) => {
     return {
         ...cleanedProfile,
         location: attributes?.find((atr)=> { return atr.key === 'location'})?.value,
-        website: attributes?.find((atr)=> { return atr.key === 'website'})?.value,
+        website: attributes?.find((atr)=> { return atr.key === 'website'})?.value ? attributes?.find((atr)=> { return atr.key === 'website'})?.value.replace('https://', '').replace('http://'): null,
         dateJoined: attributes?.find((atr)=> { return atr.key === 'dateJoined'})?.value
     }
 }
