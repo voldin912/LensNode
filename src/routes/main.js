@@ -1,24 +1,26 @@
-const express = require('express')
+import express from 'express'
 const router = express.Router()
-const { getProfile } = require('../apis/apolloClient')
-const { getCleanedProfile } = require('../utils/ipfsCleaningUtility');
+import { getProfile } from '../apis/apolloClient'
+import { getCleanedProfile } from '../utils/ipfsCleaningUtility';
+
 router.get('', async (req, res) => {
 	res.render('index')
 });
 
-router.get('/profile/:name', async (req, res) => { 
-	let name = req.params.name;
-	let handleName = name + '.lens'
-	let data = await getProfile(handleName);
-	if(data && data.profile){
+router.get('/profile/:name', async (req, res) => {
+	const name = req.params.name;
+	const handleName = `${ name }.lens`
+	const data = await getProfile(handleName);
+	if (data && data.profile) {
 		const profileData = getCleanedProfile(data.profile);
 		res.render('profile', { user: profileData });
-	} else { 
+	} else {
 		res.status(404).render('common/404');
 	}
 })
 
-router.use(async (req, res) => { 
+router.use(async (req, res) => {
 	res.status(404).render('common/404');
 })
-module.exports = router;
+
+export default router;

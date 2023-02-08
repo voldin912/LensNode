@@ -1,11 +1,8 @@
-const { gql } = require('@apollo/client/core')
+import { gql } from '@apollo/client/core';
 
 const QUERY_PROFILE_BY_ID = gql`
-
-  # create a GraphQL query to be executed by Apollo Client
-
   query Profile($profileRequest: SingleProfileQueryRequest!) {
-    profile(request:$profileRequest){
+    profile(request: $profileRequest) {
       id
       name
       metadata
@@ -60,4 +57,4 @@ const QUERY_PROFILE_BY_ID = gql`
   }
 `;
 
-module.exports = { QUERY_PROFILE_BY_ID }
+export { QUERY_PROFILE_BY_ID };
