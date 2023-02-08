@@ -8,7 +8,8 @@ const getCleanedProfile = (profile) => {
     return {
         ...cleanedProfile,
         location: attributes?.find((atr)=> { return atr.key === 'location'})?.value,
-        website: attributes?.find((atr)=> { return atr.key === 'website'})?.value ? attributes?.find((atr)=> { return atr.key === 'website'})?.value.replace('https://', '').replace('http://'): null,
+        website: attributes?.find((atr)=> { return atr.key === 'website'})?.value ? new URL(attributes?.find((atr)=> { return atr.key === 'website'}).value).hostname: null,
+        websiteAddress: attributes?.find((atr)=> { return atr.key === 'website'})?.value ? attributes?.find((atr)=> { return atr.key === 'website'}).value: null,
         dateJoined: attributes?.find((atr)=> { return atr.key === 'dateJoined'})?.value
     }
 }
