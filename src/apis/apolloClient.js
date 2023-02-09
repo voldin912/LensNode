@@ -1,4 +1,4 @@
-import { ApolloClient, InMemoryCache, HttpLink } from '@apollo/client/core';
+import { ApolloClient, InMemoryCache, HttpLink } from '@apollo/client/core/index.js';
 import { QUERY_PROFILE_BY_ID } from './queries';
 import fetch from 'cross-fetch';
 
