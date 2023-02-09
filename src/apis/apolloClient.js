@@ -1,6 +1,6 @@
-const { ApolloClient, InMemoryCache, HttpLink } = require('@apollo/client/core');
-const { QUERY_PROFILE_BY_ID } = require('./queries');
-const { fetch } = require('cross-fetch');
+import { ApolloClient, InMemoryCache, HttpLink } from '@apollo/client/core/index.js';
+import { QUERY_PROFILE_BY_ID } from './queries';
+import fetch from 'cross-fetch';
 
 const client = new ApolloClient({
     cache: new InMemoryCache(),
@@ -9,17 +9,17 @@ const client = new ApolloClient({
 
 const getProfile = async (handle) => {
     try {
-        const data = (await client.query({
-            query:QUERY_PROFILE_BY_ID,
-            variables:{
-                profileRequest:{ handle: handle}
+        const { data } = await client.query({
+            query: QUERY_PROFILE_BY_ID,
+            variables: {
+                profileRequest: { handle: handle }
             }
-        })).data;    
+        });
         return data;
     } catch (error) {
         console.log(error);
         return null;
     }
-}
+};
 
-module.exports = { getProfile }
+export { getProfile };

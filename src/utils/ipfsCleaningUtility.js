@@ -1,11 +1,11 @@
-const IPFS_GATEWAY = 'https://gateway.ipfscdn.io/ipfs/'
+const IPFS_GATEWAY = 'https://gateway.ipfscdn.io/ipfs/';
 
 const createURL = (urlString) => {
     if (!/^https?:\/\//i.test(urlString)) {
         urlString = 'http://' + urlString;
     }
     return new URL(urlString);
-}
+};
 
 const getCleanedProfile = (profile) => {
     let cleanedProfile = { ...profile };
@@ -19,7 +19,7 @@ const getCleanedProfile = (profile) => {
         websiteAddress: attributes?.find((atr)=> { return atr.key === 'website'})?.value ? createURL(attributes?.find((atr)=> { return atr.key === 'website'}).value): null,
         dateJoined: attributes?.find((atr)=> { return atr.key === 'dateJoined'})?.value
     }
-}
+};
 
 const replaceIpfs = (obj) => {
     const copy = {};
@@ -40,4 +40,4 @@ const replaceIpfs = (obj) => {
     return copy;
 };
 
-module.exports = { getCleanedProfile };
+export { getCleanedProfile };
