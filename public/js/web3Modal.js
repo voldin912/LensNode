@@ -21,17 +21,16 @@ window.onload = () => {
     let provider;
 
     // Address of the selected account
-    let selectedAccount;
+    let address;
 
     /**
      * Setup the orchestra
      */
     function init() {
-
-      console.log("Initializing example");
-      console.log("WalletConnectProvider is", WalletConnectProvider);
-      console.log("Fortmatic is", Fortmatic);
-      console.log("window.web3 is", window.web3, "window.ethereum is", window.ethereum);
+      // console.log("WalletConnectProvider is", WalletConnectProvider);
+      // console.log("Fortmatic is", Fortmatic);
+      // console.log("window.web3 is", window.web3);
+      // console.log("window.ethereum is", window.ethereum);
 
       // Check that the web page is run in a secure context,
       // as otherwise MetaMask won't be available
@@ -54,7 +53,6 @@ window.onload = () => {
             infuraId: "8043bb2cf99347b1bfadfb233c5325c0",
           }
         },
-
         fortmatic: {
           package: Fortmatic,
           options: {
@@ -86,23 +84,23 @@ window.onload = () => {
       const chainId = await web3.eth.getChainId();
       // Load chain information over an HTTP API
       const chainData = evmChains.getChain(chainId);
-      document.querySelector("#network-name").textContent = chainData.name;
+      // document.querySelector("#network-name").textContent = chainData.name;
 
       // Get list of accounts of the connected wallet
       const accounts = await web3.eth.getAccounts();
 
       // MetaMask does not give you all accounts, only the selected account
-      console.log("Got accounts", accounts);
-      selectedAccount = accounts[0];
+      // console.log("Got accounts", accounts);
+      address = accounts[0];
 
-      document.querySelector("#selected-account").textContent = selectedAccount;
+      // document.querySelector("#selected-account").textContent = address;
 
       // Get a handl
-      const template = document.querySelector("#template-balance");
-      const accountContainer = document.querySelector("#accounts");
+      // const template = document.querySelector("#template-balance");
+      // const accountContainer = document.querySelector("#accounts");
 
       // Purge UI elements any previously loaded accounts
-      accountContainer.innerHTML = '';
+      // accountContainer.innerHTML = '';
 
       // Go through all accounts and get their ETH balance
       const rowResolvers = accounts.map(async (address) => {
@@ -112,10 +110,10 @@ window.onload = () => {
         const ethBalance = web3.utils.fromWei(balance, "ether");
         const humanFriendlyBalance = parseFloat(ethBalance).toFixed(4);
         // Fill in the templated row and put in the document
-        const clone = template.content.cloneNode(true);
-        clone.querySelector(".address").textContent = address;
-        clone.querySelector(".balance").textContent = humanFriendlyBalance;
-        accountContainer.appendChild(clone);
+        // const clone = template.content.cloneNode(true);
+        // clone.querySelector(".address").textContent = address;
+        // clone.querySelector(".balance").textContent = humanFriendlyBalance;
+        // accountContainer.appendChild(clone);
       });
 
       // Because rendering account does its own RPC commucation
@@ -124,8 +122,11 @@ window.onload = () => {
       await Promise.all(rowResolvers);
 
       // Display fully loaded UI for wallet data
-      document.querySelector("#prepare").style.display = "none";
-      document.querySelector("#connected").style.display = "block";
+      // document.querySelector("#prepare").style.display = "none";
+      // document.querySelector("#connected").style.display = "block";
+
+      // Try to login
+      await login()
     }
 
     /**
@@ -138,16 +139,16 @@ window.onload = () => {
       // If any current data is displayed when
       // the user is switching acounts in the wallet
       // immediate hide this data
-      document.querySelector("#connected").style.display = "none";
-      document.querySelector("#prepare").style.display = "block";
+      // document.querySelector("#connected").style.display = "none";
+      // document.querySelector("#prepare").style.display = "block";
 
       // Disable button while UI is loading.
       // fetchAccountData() will take a while as it communicates
       // with Ethereum node via JSON-RPC and loads chain data
       // over an API call.
-      document.querySelector("#main_login_btn").setAttribute("disabled", "disabled")
+      // document.querySelector("#main_login_btn").setAttribute("disabled", "disabled")
       await fetchAccountData(provider);
-      document.querySelector("#main_login_btn").removeAttribute("disabled")
+      // document.querySelector("#main_login_btn").removeAttribute("disabled")
     }
 
     /**
@@ -173,7 +174,7 @@ window.onload = () => {
         fetchAccountData();
       });
 
-      // Subscribe to networkId change
+      // deprecated - Subscribe to networkId change
       provider.on("networkChanged", (networkId) => {
         fetchAccountData();
       });
@@ -199,11 +200,87 @@ window.onload = () => {
         provider = null;
       }
 
-      selectedAccount = null;
+      address = null;
 
       // Set the UI back to the initial state
-      document.querySelector("#prepare").style.display = "block";
-      document.querySelector("#connected").style.display = "none";
+      // document.querySelector("#prepare").style.display = "block";
+      // document.querySelector("#connected").style.display = "none";
+    }
+
+    /**
+     * Login user to https://www.lens.xyz/
+     * and set accessToken and refreshToken to local storage
+     */
+    async function login() {
+      if (localStorage.getItem('accessToken')) {
+        alert('You are connected to Lens.')
+        return
+      }
+
+      try {
+        const Challenge = JSON.stringify({
+          query: `
+            query Challenge($address: EthereumAddress!) {
+              challenge(request: { address: $address }) {
+                text
+              }
+            }
+          `,
+          variables: { address }
+        });
+
+        const challengeInfo = await fetch(
+          'https://api.lens.dev',
+          {
+            method: 'POST',
+            body: Challenge,
+            headers: {
+              'Content-Type': 'application/json',
+              'Content-Length': Challenge.length
+            },
+          }
+        ).then(res => res.json());
+
+        const signature = await new Web3(provider).eth.personal.sign(challengeInfo.data.challenge.text, address)
+
+        const Authenticate = JSON.stringify({
+          query: `
+            mutation Authenticate(
+              $address: EthereumAddress!
+              $signature: Signature!
+            ) {
+              authenticate(request: {
+                address: $address,
+                signature: $signature
+              }) {
+                accessToken
+                refreshToken
+              }
+            }
+          `,
+          variables: { address, signature }
+        });
+
+        const authData = await fetch(
+          'https://api.lens.dev',
+          {
+            method: 'POST',
+            body: Authenticate,
+            headers: {
+              'Content-Type': 'application/json',
+              'Content-Length': Authenticate.length
+            },
+          }
+        ).then(res => res.json());
+
+        localStorage.setItem('accessToken', authData.data.authenticate.accessToken)
+        localStorage.setItem('refreshToken', authData.data.authenticate.refreshToken)
+
+        alert('You are successfully connected to Lens.')
+      } catch (error) {
+        await onDisconnect()
+        console.log('Error signing in: ', err)
+      }
     }
 
     /**
@@ -211,6 +288,6 @@ window.onload = () => {
      */
     init();
     document.querySelector("#main_login_btn").addEventListener("click", onConnect);
-    document.querySelector("#btn-disconnect").addEventListener("click", onDisconnect);
+    // document.querySelector("#btn-disconnect").addEventListener("click", onDisconnect);
   }, 500);
 }
