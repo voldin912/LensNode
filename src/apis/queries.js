@@ -57,12 +57,4 @@ const QUERY_PROFILE_BY_ID = gql`
   }
 `;
 
-const QUERY_CHALLENGE = gql`
-  query Challenge($address: EthereumAddress!) {
-    challenge(request: { address: $address }) {
-      text
-    }
-  }
-`
-
-export { QUERY_PROFILE_BY_ID, QUERY_CHALLENGE };
+export { QUERY_PROFILE_BY_ID };
