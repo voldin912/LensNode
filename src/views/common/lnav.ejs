@@ -491,104 +491,73 @@
 		</form>
 	</div>
 
-	<% /* %>
-		<div class="container">
-			<div class="row">
-				<div class="col-md-12">
-					<h1>Wallet Connect</h1>
-					<p>No wallet connected. Connect wallet to show accounts and their ETH balances.</p>
-					<div class="alert alert-danger" id="alert-error-https" style="display: none">
-						You can run this example only over HTTPS connection.
-					</div>
-					<div id="prepare">
-						<button class="btn btn-primary" id="btn-connect">
-							Connect wallet
-						</button>
-					</div>
-					<div id="connected" style="display: none">
-						<button class="btn btn-primary" id="btn-disconnect">
-							Disconnect wallet
-						</button>
-						<hr>
-						<div id="network">
-							<p>
-								<strong>Connected blockchain:</strong> <span id="network-name"></span>
-							</p>
-							<p>
-								<strong>Selected account:</strong> <span id="selected-account"></span>
-							</p>
-						</div>
-						<hr>
-						<h3>All account balances</h3>
-						<table class="table table-listing">
-							<thead>
-								<th>Address</th>
-								<th>ETH balance</th>
-							</thead>
-							<tbody id="accounts">
-							</tbody>
-						</table>
-						<p>Please try to switch between different accounts in your wallet if your wallet supports this
-							functionality.
-						</p>
-					</div>
-					<br>
-				</div>
+	<div class="ct_modal" id="lens-connect-modal">
+		<div class="modal-container">
+			<div class="ct_modal_header">
+				<button class="close_ct_modal" data-ctModalClose>
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="rgb(15, 20, 25)" class="bi bi-x-lg"
+						viewBox="0 0 16 16">
+						<path
+							d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z" />
+					</svg>
+				</button>
+			</div>
+			<div class="modal-body">
+				<h4>
+					You have successfully connected to your wallet.
+					</br>
+					Please connect to the <a href="https://www.lens.xyz/" target="_blank">lens</a> now.
+				</h4>
+			</div>
+			<div class="ct_modal_footer">
+				<button class="rd-btn" id="lens-connect">Connect to lens</button>
 			</div>
 		</div>
-		<div id="templates" style="display: none">
-			<template id="template-balance">
-				<tr>
-					<th class="address"></th>
-					<td class="balance"></td>
-				</tr>
-			</template>
-		</div>
-		<% */ %>
+	</div>
 
-			<script>
-				// Script for open/close Modal 
-				document.querySelectorAll('[data-ctModalTrigger]').forEach(single => {
-					single.addEventListener('click', function (e) {
-						e.preventDefault()
-						const ctModal = document.querySelector(single.dataset.ctmodaltrigger)
-						ctModal.classList.add('show');
-						ctModal.insertAdjacentHTML('afterbegin', '<div class="ct_modal_overlay"></div>');
-						ctModal.querySelector('.ct_modal_overlay').addEventListener('click', function () {
-							this.closest('.ct_modal').classList.remove('show');
-						})
-					})
+	<script>
+		// Script for open/close Modal 
+		document.querySelectorAll('[data-ctModalTrigger]').forEach(single => {
+			single.addEventListener('click', function (e) {
+				e.preventDefault()
+				const ctModal = document.querySelector(single.dataset.ctmodaltrigger)
+				ctModal.classList.add('show');
+				ctModal.insertAdjacentHTML('afterbegin', '<div class="ct_modal_overlay"></div>');
+				ctModal.querySelector('.ct_modal_overlay').addEventListener('click', function () {
+					this.closest('.ct_modal').classList.remove('show');
 				})
+			})
+		})
 
-				document.querySelectorAll('[data-ctModalClose]').forEach(single => {
-					single.addEventListener('click', function (e) {
-						e.preventDefault()
-						this.closest('.ct_modal').classList.remove('show');
-					})
+		document.querySelectorAll('[data-ctModalClose]').forEach(single => {
+			single.addEventListener('click', function (e) {
+				e.preventDefault()
+				this.closest('.ct_modal').classList.remove('show');
+			})
+		})
+
+
+		// Script for Dropdown 
+		let index = 1;
+
+		const on = (listener, query, fn) => {
+			document.querySelectorAll(query).forEach(item => {
+				item.addEventListener(listener, el => {
+					fn(el);
 				})
+			})
+		}
 
-
-				// Script for Dropdown 
-				let index = 1;
-
-				const on = (listener, query, fn) => {
-					document.querySelectorAll(query).forEach(item => {
-						item.addEventListener(listener, el => {
-							fn(el);
-						})
-					})
-				}
-
-				on('click', '.selectBtn', item => {
-					const next = item.target.nextElementSibling;
-					next.classList.toggle('toggle');
-					next.style.zIndex = index++;
-				});
-				on('click', '.option', item => {
-					item.target.closest('.selectDropdown').classList.remove('toggle');
-					const parent = item.target.closest('.select').children[0];
-					parent.setAttribute('data-type', item.target.closest('.option').getAttribute('data-type'));
-					parent.innerHTML = item.target.closest('.option').querySelector('.display-text').innerHTML;
-				})
-			</script>
-			<script type="text/javascript" src="/js/web3Modal.js"></script>
+		on('click', '.selectBtn', item => {
+			const next = item.target.nextElementSibling;
+			next.classList.toggle('toggle');
+			next.style.zIndex = index++;
+		});
+		on('click', '.option', item => {
+			item.target.closest('.selectDropdown').classList.remove('toggle');
+			const parent = item.target.closest('.select').children[0];
+			parent.setAttribute('data-type', item.target.closest('.option').getAttribute('data-type'));
+			parent.innerHTML = item.target.closest('.option').querySelector('.display-text').innerHTML;
+		})
+	</script>
+	<script type="text/javascript" src="/js/web3Modal.js"></script>
