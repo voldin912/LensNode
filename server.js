@@ -1,6 +1,9 @@
 import express from 'express'
 import router from './src/routes/main'
 import path from 'path';
+import http from 'http'
+import https from 'https'
+import fs from 'fs'
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -17,6 +20,54 @@ app.set('view engine', 'ejs')
 
 app.use('/', router)
 
-const server = app.listen(5000, () => {
-    console.log(`Express is running on port ${server.address().port} http://localhost:5000`);
+let server
+let link
+
+const createServerConfig = {
+    http: () => {
+        server = http.createServer(app)
+        server.listen(5000)
+        link = 'http://localhost:5000'
+    },
+    // run https if you need MetaMask (crypto wallet) enabled
+    https: () => {
+        server = https.createServer({
+            key: fs.readFileSync('./ssl/client-key.pem'),
+            cert: fs.readFileSync('./ssl/client-cert.pem')
+        }, app)
+        server.listen(443)
+        link = 'https://localhost'
+    }
+}
+
+createServerConfig.https()
+
+server.on('error', (error) => {
+    if (error.syscall !== 'listen') {
+        throw error;
+    }
+
+    const bind = typeof port === 'string'
+        ? 'Pipe ' + port
+        : 'Port ' + port;
+
+    switch (error.code) {
+        case 'EACCES':
+            console.error(bind + ' requires elevated privileges');
+            process.exit(1);
+        case 'EADDRINUSE':
+            console.error(bind + ' is already in use');
+            process.exit(1);
+        default:
+            throw error;
+    }
+});
+
+server.on('listening', () => {
+    const addr = server.address();
+    const port = typeof addr === 'string'
+        ? 'pipe ' + addr
+        : 'port ' + addr.port;
+
+    console.info(`App listening on port ${port} ${link}`);
 });

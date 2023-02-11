@@ -1,3 +1,18 @@
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" defer></script>
+
+<!--
+      Use unpkg CDN to load all NPM packages to vanilla Javascript - read more at http://unpkg.com
+      On your deployment, you properly either want to use a preprocessing tool like webpack
+      to include these files, or extract NPM archives and manually host the files inside.
+      TODO: Pin down all versions.
+    -->
+<script type="text/javascript" src="https://unpkg.com/web3@latest/dist/web3.min.js"></script>
+<script type="text/javascript" src="https://unpkg.com/web3modal@1.9.4/dist/index.js"></script>
+<script type="text/javascript"
+  src="https://unpkg.com/@walletconnect/web3-provider@1.6.5/dist/umd/index.min.js"></script>
+<script type="text/javascript" src="https://unpkg.com/evm-chains@0.2.0/dist/umd/index.min.js"></script>
+<script type="text/javascript" src="https://unpkg.com/fortmatic@2.0.6/dist/fortmatic.js"></script>
+
 </body>
+
 </html>
