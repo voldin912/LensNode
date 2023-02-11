@@ -63,7 +63,7 @@ window.onload = () => {
       };
 
       web3Modal = new Web3Modal({
-        cacheProvider: false, // optional
+        cacheProvider: true, // optional
         providerOptions, // required
         disableInjectedProvider: false, // optional. For MetaMask / Brave / Opera.
       });
@@ -80,53 +80,57 @@ window.onload = () => {
 
       console.log("Web3 instance is", web3);
 
-      // Get connected chain id from Ethereum node
-      const chainId = await web3.eth.getChainId();
-      // Load chain information over an HTTP API
-      const chainData = evmChains.getChain(chainId);
-      // document.querySelector("#network-name").textContent = chainData.name;
+      try {
+        // Get connected chain id from Ethereum node
+        const chainId = await web3.eth.getChainId();
+        // Load chain information over an HTTP API
+        const chainData = evmChains.getChain(chainId);
+        // document.querySelector("#network-name").textContent = chainData.name;
 
-      // Get list of accounts of the connected wallet
-      const accounts = await web3.eth.getAccounts();
+        // Get list of accounts of the connected wallet
+        const accounts = await web3.eth.getAccounts();
 
-      // MetaMask does not give you all accounts, only the selected account
-      // console.log("Got accounts", accounts);
-      address = accounts[0];
+        // MetaMask does not give you all accounts, only the selected account
+        // console.log("Got accounts", accounts);
+        address = accounts[0];
 
-      // document.querySelector("#selected-account").textContent = address;
+        // document.querySelector("#selected-account").textContent = address;
 
-      // Get a handl
-      // const template = document.querySelector("#template-balance");
-      // const accountContainer = document.querySelector("#accounts");
+        // Get a handl
+        // const template = document.querySelector("#template-balance");
+        // const accountContainer = document.querySelector("#accounts");
 
-      // Purge UI elements any previously loaded accounts
-      // accountContainer.innerHTML = '';
+        // Purge UI elements any previously loaded accounts
+        // accountContainer.innerHTML = '';
 
-      // Go through all accounts and get their ETH balance
-      const rowResolvers = accounts.map(async (address) => {
-        const balance = await web3.eth.getBalance(address);
-        // ethBalance is a BigNumber instance
-        // https://github.com/indutny/bn.js/
-        const ethBalance = web3.utils.fromWei(balance, "ether");
-        const humanFriendlyBalance = parseFloat(ethBalance).toFixed(4);
-        // Fill in the templated row and put in the document
-        // const clone = template.content.cloneNode(true);
-        // clone.querySelector(".address").textContent = address;
-        // clone.querySelector(".balance").textContent = humanFriendlyBalance;
-        // accountContainer.appendChild(clone);
-      });
+        // Go through all accounts and get their ETH balance
+        const rowResolvers = accounts.map(async (address) => {
+          const balance = await web3.eth.getBalance(address);
+          // ethBalance is a BigNumber instance
+          // https://github.com/indutny/bn.js/
+          const ethBalance = web3.utils.fromWei(balance, "ether");
+          const humanFriendlyBalance = parseFloat(ethBalance).toFixed(4);
+          // Fill in the templated row and put in the document
+          // const clone = template.content.cloneNode(true);
+          // clone.querySelector(".address").textContent = address;
+          // clone.querySelector(".balance").textContent = humanFriendlyBalance;
+          // accountContainer.appendChild(clone);
+        });
 
-      // Because rendering account does its own RPC commucation
-      // with Ethereum node, we do not want to display any results
-      // until data for all accounts is loaded
-      await Promise.all(rowResolvers);
+        // Because rendering account does its own RPC commucation
+        // with Ethereum node, we do not want to display any results
+        // until data for all accounts is loaded
+        await Promise.all(rowResolvers);
 
-      // Display fully loaded UI for wallet data
-      // document.querySelector("#prepare").style.display = "none";
-      // document.querySelector("#connected").style.display = "block";
+        // Display fully loaded UI for wallet data
+        // document.querySelector("#prepare").style.display = "none";
+        // document.querySelector("#connected").style.display = "block";
 
-      // Try to login
-      await login()
+        // Try to authenticateToLens
+        // await authenticateToLens()
+      } catch (error) {
+        alert(error)
+      }
     }
 
     /**
@@ -147,55 +151,50 @@ window.onload = () => {
       // with Ethereum node via JSON-RPC and loads chain data
       // over an API call.
       // document.querySelector("#main_login_btn").setAttribute("disabled", "disabled")
-      await fetchAccountData(provider);
+      await fetchAccountData();
       // document.querySelector("#main_login_btn").removeAttribute("disabled")
     }
 
-    /**
-     * Connect wallet button pressed.
-     */
-    async function onConnect() {
-      console.log("Opening a dialog", web3Modal);
-
+    // connect wallet or get address if connected
+    async function walletConnect() {
       try {
-        provider = await web3Modal.connect();
-      } catch (e) {
-        console.log("Could not get a wallet connection", e);
+        const web3 = new Web3(window.ethereum)
+        const [account] = await web3.eth.getAccounts()
+
+        if (account) {
+          address = account
+        } else {
+          provider = await web3Modal.connect();
+
+          // subscribe to accounts change
+          provider.on("accountsChanged", (accounts) => {
+            fetchAccountData();
+          });
+
+          // subscribe to chain change
+          provider.on("chainChanged", (chainId) => {
+            fetchAccountData();
+          });
+
+          await fetchAccountData();
+        }
+      } catch (err) {
+        alert(`Could not get a wallet connection: ${err.message}`);
         return;
       }
-
-      // Subscribe to accounts change
-      provider.on("accountsChanged", (accounts) => {
-        fetchAccountData();
-      });
-
-      // Subscribe to chainId change
-      provider.on("chainChanged", (chainId) => {
-        fetchAccountData();
-      });
-
-      // deprecated - Subscribe to networkId change
-      provider.on("networkChanged", (networkId) => {
-        fetchAccountData();
-      });
-
-      await refreshAccountData();
     }
 
     /**
      * Disconnect wallet button pressed.
      */
-    async function onDisconnect() {
-      console.log("Killing the wallet connection", provider);
+    async function walletDisconnect() {
+      console.log("Killing the wallet connection");
 
-      // TODO: Which providers have close method?
-      if (provider.close) {
-        await provider.close();
+      const currentProvider = web3Modal.providerController.injectedProvider
+      console.log(currentProvider, '<< currentProvider');
 
-        // If the cached provider is not cleared,
-        // WalletConnect will default to the existing session
-        // and does not allow to re-scan the QR code with a new wallet.
-        // Depending on your use case you may want or want not his behavir.
+      if (currentProvider) {
+        // await currentProvider.close();
         await web3Modal.clearCachedProvider();
         provider = null;
       }
@@ -211,7 +210,9 @@ window.onload = () => {
      * Login user to https://www.lens.xyz/
      * and set accessToken and refreshToken to local storage
      */
-    async function login() {
+    async function authenticateToLens() {
+      const LENS_API = 'https://api.lens.dev'
+
       if (localStorage.getItem('accessToken')) {
         alert('You are connected to Lens.')
         return
@@ -230,7 +231,7 @@ window.onload = () => {
         });
 
         const challengeInfo = await fetch(
-          'https://api.lens.dev',
+          LENS_API,
           {
             method: 'POST',
             body: Challenge,
@@ -262,7 +263,7 @@ window.onload = () => {
         });
 
         const authData = await fetch(
-          'https://api.lens.dev',
+          LENS_API,
           {
             method: 'POST',
             body: Authenticate,
@@ -277,9 +278,9 @@ window.onload = () => {
         localStorage.setItem('refreshToken', authData.data.authenticate.refreshToken)
 
         alert('You are successfully connected to Lens.')
-      } catch (error) {
-        await onDisconnect()
-        console.log('Error signing in: ', err)
+      } catch (err) {
+        await walletDisconnect()
+        alert(err?.message)
       }
     }
 
@@ -287,7 +288,7 @@ window.onload = () => {
      * Main entry point.
      */
     init();
-    document.querySelector("#main_login_btn").addEventListener("click", onConnect);
-    // document.querySelector("#btn-disconnect").addEventListener("click", onDisconnect);
+    document.querySelector("#main_login_btn").addEventListener("click", walletConnect);
+    document.querySelector("#main_disconnect_btn").addEventListener("click", walletDisconnect);
   }, 500);
 }

@@ -320,14 +320,19 @@
 									<% } %>
 										<div class="Nav-main">
 											<% if(loguser){ %>
-												<div class="Nav-entry-link" id="logout_btn">
+												<div class="Nav-entry-link" id="logout_btn" data-ctModalTrigger="#tweet-modal">
 													<div class="Nav-main-btn">Logout</div>
 												</div>
 												<% } else { %>
 													<div class="Nav-entry-link" id="main_login_btn">
 														<div class="Nav-main-btn">Login</div>
 													</div>
-													<% } %>
+													<% /* %>
+														<div class="Nav-entry-link" id="main_disconnect_btn">
+															<div class="Nav-main-btn">Disconnect</div>
+														</div>
+														<% */ %>
+															<% } %>
 										</div>
 						</nav>
 						<div></div>
