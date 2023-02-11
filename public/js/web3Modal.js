@@ -6,6 +6,8 @@
  * - browser extension: https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn/related?hl=en
  */
 
+const LENS_API = 'https://api.lens.dev'
+
 window.onload = () => {
   setTimeout(() => {
     const Web3Modal = window?.Web3Modal?.default;
@@ -78,7 +80,7 @@ window.onload = () => {
           address = window.ethereum.selectedAddress
 
           if (!localStorage.getItem('accessToken')) {
-            triggerLensAuthenticationModal()
+            triggerLensModal('#lens-connect-modal')
           }
         } else {
           provider = await web3Modal.connect();
@@ -96,7 +98,7 @@ window.onload = () => {
           address = window.ethereum.selectedAddress
 
           // call modal on UI for user
-          triggerLensAuthenticationModal()
+          triggerLensModal('#lens-connect-modal')
         }
       } catch (err) {
         alert(`Could not get a wallet connection: ${err?.message ?? err}`);
@@ -119,6 +121,118 @@ window.onload = () => {
       address = null;
     }
 
+    // graphql Profiles request to lens
+    async function getProfiles() {
+      const Profiles = JSON.stringify({
+        query: `
+        query Profiles($ownedBy: [EthereumAddress!]) {
+          profiles(request: { ownedBy: $ownedBy, limit: 10 }) {
+            items {
+              id
+              name
+              bio
+              attributes {
+                displayType
+                traitType
+                key
+                value
+              }
+              followNftAddress
+              metadata
+              isDefault
+              picture {
+                ... on NftImage {
+                  contractAddress
+                  tokenId
+                  uri
+                  verified
+                }
+                ... on MediaSet {
+                  original {
+                    url
+                    mimeType
+                  }
+                }
+                __typename
+              }
+              handle
+              coverPicture {
+                ... on NftImage {
+                  contractAddress
+                  tokenId
+                  uri
+                  verified
+                }
+                ... on MediaSet {
+                  original {
+                    url
+                    mimeType
+                  }
+                }
+                __typename
+              }
+              ownedBy
+              dispatcher {
+                address
+                canUseRelay
+              }
+              stats {
+                totalFollowers
+                totalFollowing
+                totalPosts
+                totalComments
+                totalMirrors
+                totalPublications
+                totalCollects
+              }
+              followModule {
+                ... on FeeFollowModuleSettings {
+                  type
+                  amount {
+                    asset {
+                      symbol
+                      name
+                      decimals
+                      address
+                    }
+                    value
+                  }
+                  recipient
+                }
+                ... on ProfileFollowModuleSettings {
+                 type
+                }
+                ... on RevertFollowModuleSettings {
+                 type
+                }
+              }
+            }
+            pageInfo {
+              prev
+              next
+              totalCount
+            }
+          }
+        }
+        `,
+        variables: { ownedBy: [address] }
+      })
+
+      const profiles = await fetch(
+        LENS_API,
+        {
+          method: 'POST',
+          body: Profiles,
+          headers: {
+            'Content-Type': 'application/json',
+            'Content-Length': Profiles.length
+          },
+        }
+      ).then(res => res.json());
+
+      return profiles?.data?.profiles?.items
+    }
+
     /**
      * Login user to https://www.lens.xyz/
      * and set accessToken and refreshToken to local storage
@@ -128,8 +242,6 @@ window.onload = () => {
         alert('You are connected to Lens.')
         return
       }
-
-      const LENS_API = 'https://api.lens.dev'
 
       try {
         const Challenge = JSON.stringify({
@@ -190,17 +302,32 @@ window.onload = () => {
           }
         ).then(res => res.json());
 
-        localStorage.setItem('accessToken', authData.data.authenticate.accessToken)
-        localStorage.setItem('refreshToken', authData.data.authenticate.refreshToken)
+        if (authData.data?.authenticate?.accessToken && authData.data?.authenticate?.refreshToken) {
+          localStorage.setItem('accessToken', authData.data?.authenticate?.accessToken)
+          localStorage.setItem('refreshToken', authData.data?.authenticate?.refreshToken)
+
+          document.querySelector("#lens-connect-modal").classList.remove('show')
+
+          await checkLensProfiles()
+        } else {
+          document.querySelector("#lens-connect-modal").classList.remove('show')
+        }
       } catch (err) {
+        document.querySelector("#lens-connect-modal").classList.remove('show')
         alert(err?.message ?? err)
       }
-
-      document.querySelector("#lens-connect-modal").classList.remove('show')
     }
 
-    function triggerLensAuthenticationModal() {
-      const lensConnectModal = document.querySelector("#lens-connect-modal")
+    async function checkLensProfiles() {
+      const profiles = await getProfiles()
+
+      if (!profiles?.length) {
+        triggerLensModal('#lens-claim-modal')
+      }
+    }
+
+    function triggerLensModal(modalId = '') {
+      const lensConnectModal = document.querySelector(modalId)
       lensConnectModal.classList.add("show")
       lensConnectModal.insertAdjacentHTML('afterbegin', '<div class="ct_modal_overlay"></div>');
       lensConnectModal.querySelector('.ct_modal_overlay').addEventListener('click', function () {
@@ -210,7 +337,10 @@ window.onload = () => {
 
     // initialise
     init();
+
+    // set on click events for buttons
     document.querySelector("#main_login_btn").addEventListener("click", walletConnect);
     document.querySelector("#lens-connect").addEventListener("click", authenticateToLens);
+    document.querySelector("#main_disconnect_btn").addEventListener("click", getProfiles);
   }, 500);
 }
