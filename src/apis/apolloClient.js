@@ -1,10 +1,18 @@
-import { ApolloClient, InMemoryCache, HttpLink } from '@apollo/client/core/index.js';
-import { QUERY_PROFILE_BY_ID } from './queries';
+import { ApolloClient, InMemoryCache, HttpLink, createHttpLink } from '@apollo/client/core/index.js';
+import { QUERY_PROFILE_BY_ID, GET_PUBLICATIONS_QUERY } from './queries';
 import fetch from 'cross-fetch';
 
+const API_URL = 'https://api.lens.dev';
+console.log(API_URL)
+
+// `httpLink` our gateway to the Lens GraphQL API. It lets us request for data from the API and passes it forward
+const httpLink = new HttpLink({ uri: API_URL, fetch });
+
+
 const client = new ApolloClient({
-    cache: new InMemoryCache(),
-    link: new HttpLink({ uri: 'https://api.lens.dev', fetch })
+    //link: authLink.concat(httpLink),
+    link: httpLink,
+    cache: new InMemoryCache()
 });
 
 const getProfile = async (handle) => {
@@ -22,4 +30,14 @@ const getProfile = async (handle) => {
     }
 };
 
-export { getProfile };
+
+
+const getPublications = async () => {
+  const { data } = await client.query({
+    query: GET_PUBLICATIONS_QUERY,
+  });
+  return data.explorePublications.items;
+};
+
+
+export { getProfile, getPublications };

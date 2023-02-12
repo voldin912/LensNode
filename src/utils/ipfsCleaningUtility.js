@@ -1,5 +1,4 @@
 const IPFS_GATEWAY = 'https://gateway.ipfscdn.io/ipfs/';
-
 const createURL = (urlString) => {
     if (!/^https?:\/\//i.test(urlString)) {
         urlString = 'http://' + urlString;
@@ -40,4 +39,4 @@ const replaceIpfs = (obj) => {
     return copy;
 };
 
-export { getCleanedProfile };
+export { getCleanedProfile, replaceIpfs };

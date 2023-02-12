@@ -1,10 +1,16 @@
 import express from 'express'
 const router = express.Router()
-import { getProfile } from '../apis/apolloClient'
+import { getProfile , getPublications} from '../apis/apolloClient'
 import { getCleanedProfile } from '../utils/ipfsCleaningUtility';
+import moment from 'moment'
+import * as linkify from 'linkifyjs'
+import linkifyHtml from "linkify-html";
+
+
 
 router.get('', async (req, res) => {
-	res.render('index')
+	const data = await getPublications();
+	res.render('index', { articles: data, moment: moment, linkifyHtml: linkifyHtml})
 });
 
 router.get('/profile/:name', async (req, res) => {

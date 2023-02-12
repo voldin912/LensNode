@@ -57,4 +57,77 @@ const QUERY_PROFILE_BY_ID = gql`
   }
 `;
 
-export { QUERY_PROFILE_BY_ID };
+const GET_PUBLICATIONS_QUERY = gql`
+query {
+  explorePublications(request: {
+    sortCriteria: LATEST,
+    publicationTypes: [POST],
+    limit: 20
+  }) {
+    items {
+      __typename
+      ... on Post {
+        ...PostFields
+      }
+    }
+  }
+}
+
+fragment ProfileFields on Profile {
+  id
+  name
+  metadata
+  handle
+  picture {
+    ... on NftImage {
+      uri
+    }
+    ... on MediaSet {
+      original {
+        ...MediaFields
+      }
+    }
+  }
+  stats {
+    totalComments
+    totalMirrors
+    totalCollects
+  }
+}
+
+fragment MediaFields on Media {
+  url
+}
+
+fragment PublicationStatsFields on PublicationStats {
+  totalAmountOfMirrors
+  totalAmountOfCollects
+  totalAmountOfComments
+  totalUpvotes
+}
+
+fragment MetadataOutputFields on MetadataOutput {
+    content
+  media {
+    original {
+      ...MediaFields
+    }
+  }
+}
+
+fragment PostFields on Post {
+  id
+  profile {
+    ...ProfileFields
+  }
+  stats {
+    ...PublicationStatsFields
+  }
+  metadata {
+    ...MetadataOutputFields
+  }
+  createdAt
+  appId
+}
+`
+export { QUERY_PROFILE_BY_ID, GET_PUBLICATIONS_QUERY };
