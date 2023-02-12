@@ -25,7 +25,7 @@
 										</svg>
 										<div class="Nav-item">Explore</div>
 									</div>
-								</a>
+								</a> 
 								<a class="Nav-link" href="/notifications" aria-label="notifications">
 									<div class="Nav-item-hover pos_rel" id="notic" slot="position:relative;"><svg viewBox="0 0 24 24">
 											<g>
@@ -259,7 +259,45 @@
 															<% } %>
 										</div>
 						</nav>
-						<div></div>
+						<div class="bottom_user_part" id="bottom_user">
+							<div class="user_avater">
+								<img alt="" src="https://i.postimg.cc/MZdNmMMN/user.png" class="home_pro_pic" width="100%" height="49px">
+							</div>
+							<div class="user_name">
+								<h5>Abdullah</h5>
+								<span>@abdullah</span>
+							</div>
+							  <svg class="three_dot" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#000000" class="bi bi-three-dots" viewBox="0 0 16 16">
+								<path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
+							  </svg>
+
+							  <ul class="drop-up-menu" id="drop_up_menu">
+								<li><a href="#">Add an existing account</a></li>
+								<li><a href="#">Log out @mrhripon98</a></li>
+							  </ul>
+						</div>
+
+						<script>
+							
+							// script for bottom user drop up menu
+							if(document.getElementById('bottom_user') !== null) {
+								const bottom_user = document.getElementById('bottom_user');
+								bottom_user.addEventListener('click', function(e){
+									e.preventDefault();
+									this.classList.toggle('active')
+									const dropUpMenu = document.getElementById('drop_up_menu');
+									dropUpMenu.classList.toggle('show');
+								})
+							}
+
+							// Function for hide any user dropupmenu hide on outside click 
+							document.addEventListener('click', function(event) {
+								const bottom_user = document.getElementById('bottom_user');
+								if (!bottom_user.contains(event.target)) {
+									document.getElementById('drop_up_menu').classList.remove('show')
+								} 
+							});
+						</script>
 				</div>
 			</div>
 		</div>
