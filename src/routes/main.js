@@ -7,6 +7,10 @@ import { getProfile, getPublications } from '../apis/apolloClient'
 import { getCleanedProfile, text_truncate } from '../utils';
 import { authenticate } from '../middlewares/authenticate'
 
+// all you need to do now to protect any route and make use of it inside of ejs part:
+// 1. add "authenticate" as a middleware for your route
+// 2. add "connected: true" to "res.render" options
+
 export default router => {
 	router.get('', authenticate, async (req, res) => {
 		const data = await getPublications();
@@ -15,7 +19,7 @@ export default router => {
 			moment: moment,
 			linkifyHtml: linkifyHtml,
 			text_truncate: text_truncate,
-			authenticated: true
+			connected: true
 		})
 	});
 

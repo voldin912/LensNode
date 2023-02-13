@@ -2,7 +2,7 @@ import { decodeJWT, convertDateToUnixTimestamp } from '../utils'
 import { refresh } from '../apis/apolloClient'
 
 // if you are familiar with middleware, you may know that
-// next() call the means middleware check is negative (no errors found)
+// next() call means middleware check is negative (no errors found)
 
 // this middleware should only be used for secure routes
 // routes you allow the user to access if they are authenticated
@@ -12,7 +12,7 @@ export const authenticate = async (req, res, next) => {
   if (!accessToken && !refreshToken) {
     return res
       .status(401)
-      .render('common/404'); // redirect to "/login" or "/"
+      .render('common/401'); // redirect to "/login" or "/"
   }
 
   // in seconds
@@ -37,12 +37,12 @@ export const authenticate = async (req, res, next) => {
           .cookie('accessToken', refreshResult.refresh.accessToken)
           .cookie('refreshToken', refreshResult.refresh.refreshToken)
       }
+      // probably should redirect to login as well if refreshing failed
     } else {
       // access and refresh tokens have expired
-      console.log('<< BOTH TOKENS HAVE EXPIRED! >>');
       return res
         .status(401)
-        .render('common/404'); // redirect to "/login" or "/"
+        .render('common/401'); // redirect to "/login" or "/"
     }
   }
 
