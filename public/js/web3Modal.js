@@ -80,7 +80,7 @@ window.onload = () => {
           address = window.ethereum.selectedAddress
 
           if (!localStorage.getItem('accessToken')) {
-            triggerLensModal('#lens-connect-modal')
+            triggerModalById('#lens-connect-modal')
           }
         } else {
           provider = await web3Modal.connect();
@@ -98,7 +98,7 @@ window.onload = () => {
           address = window.ethereum.selectedAddress
 
           // call modal on UI for user
-          triggerLensModal('#lens-connect-modal')
+          triggerModalById('#lens-connect-modal')
         }
       } catch (err) {
         alert(`Could not get a wallet connection: ${err?.message ?? err}`);
@@ -238,7 +238,9 @@ window.onload = () => {
      * and set accessToken and refreshToken to local storage
      */
     async function authenticateToLens() {
-      if (localStorage.getItem('accessToken')) {
+      const cookies = parseCookies(document.cookie)
+
+      if (cookies['accessToken']) {
         alert('You are connected to Lens.')
         return
       }
@@ -303,8 +305,8 @@ window.onload = () => {
         ).then(res => res.json());
 
         if (authData.data?.authenticate?.accessToken && authData.data?.authenticate?.refreshToken) {
-          localStorage.setItem('accessToken', authData.data?.authenticate?.accessToken)
-          localStorage.setItem('refreshToken', authData.data?.authenticate?.refreshToken)
+          document.cookie = `accessToken=${authData.data?.authenticate?.accessToken}`
+          document.cookie = `refreshToken=${authData.data?.authenticate?.refreshToken}`
 
           document.querySelector("#lens-connect-modal").classList.remove('show')
 
@@ -322,11 +324,11 @@ window.onload = () => {
       const profiles = await getProfiles()
 
       if (!profiles?.length) {
-        triggerLensModal('#lens-claim-modal')
+        triggerModalById('#lens-claim-modal')
       }
     }
 
-    function triggerLensModal(modalId = '') {
+    function triggerModalById(modalId = '') {
       const lensConnectModal = document.querySelector(modalId)
       lensConnectModal.classList.add("show")
       lensConnectModal.insertAdjacentHTML('afterbegin', '<div class="ct_modal_overlay"></div>');
@@ -335,12 +337,31 @@ window.onload = () => {
       })
     }
 
+    function parseCookies(cookies = '') {
+      if (!cookies) {
+        return {}
+      }
+
+      return cookies.split('; ').reduce((map, cookie) => {
+        const [key, value] = cookie.split('=')
+
+        map[key] = value
+
+        return map
+      }, {})
+    }
+
+    function redirectToPath(path = '') {
+      return window?.location?.replace(`${window.location.origin}/{path}`)
+    }
+
+
     // initialise
     init();
 
     // set on click events for buttons
     document.querySelector("#main_login_btn").addEventListener("click", walletConnect);
     document.querySelector("#lens-connect").addEventListener("click", authenticateToLens);
-    document.querySelector("#main_disconnect_btn").addEventListener("click", getProfiles);
+    // document.querySelector("#main_disconnect_btn").addEventListener("click", getProfiles);
   }, 500);
 }

@@ -3,10 +3,10 @@
   "name": "koneckt",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon --es-module-specifier-resolution=node server.js"
+    "start": "nodemon --es-module-specifier-resolution=node src/index.js"
   },
   "author": "",
   "license": "ISC",
@@ -15,6 +15,7 @@
     "@babel/cli": "^7.20.7",
     "@babel/core": "^7.20.12",
     "@babel/preset-env": "^7.20.2",
+    "cookie-parser": "^1.4.6",
     "cross-fetch": "^3.1.5",
     "ejs": "^3.1.8",
     "express": "^4.18.2",
