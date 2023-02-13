@@ -1,5 +1,5 @@
 import { ApolloClient, InMemoryCache, HttpLink, createHttpLink } from '@apollo/client/core/index.js';
-import { QUERY_PROFILE_BY_ID, GET_PUBLICATIONS_QUERY } from './queries';
+import { QUERY_PROFILE_BY_ID, GET_PUBLICATIONS_QUERY, GET_SINGLE_POST } from './queries';
 import fetch from 'cross-fetch';
 
 const API_URL = 'https://api.lens.dev';
@@ -31,7 +31,6 @@ const getProfile = async (handle) => {
 };
 
 
-
 const getPublications = async () => {
   const { data } = await client.query({
     query: GET_PUBLICATIONS_QUERY,
@@ -40,4 +39,13 @@ const getPublications = async () => {
 };
 
 
-export { getProfile, getPublications };
+const getPublication = async (id) => {
+    const { data } = await client.query({
+        query: GET_SINGLE_POST,
+        variables: { id: id }
+    });
+    console.log(data.publication)
+  return data.publication;
+};
+
+export { getProfile, getPublications, getPublication };
