@@ -1,5 +1,6 @@
 const text_truncate = function(str, length, ending) {
   //str = str.replace(/(?:\r\n|\r|\n)/g, '<br>')
+  str = str.replace(/(<br\s*\/?>){3,}/gi, '<br>');
   str = str.replace(/\[([^\]]+)\]\(([^\)]+)\)/, '<a href="$2" style="color: rgb(29, 155, 240);">$1</a>');
   if (length == null) {
     length = 280;

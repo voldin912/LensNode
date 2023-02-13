@@ -6,8 +6,8 @@ body {
   counter-reset: Serial;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
+  "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+  sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -20,14 +20,14 @@ body {
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+  monospace;
 }
 
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: "Assistant", sans-serif;
+  /*font-family: "Assistant", sans-serif;*/
   word-break: break-word;
 }
 
@@ -75,6 +75,7 @@ img {
   margin-right: 10px;
   min-height: 1000px;
   height: 100%;
+  font-family: "Assistant", sans-serif;
 }
 
 .modal-edit {
@@ -656,6 +657,7 @@ input:focus {
 .Nav-component {
   position: relative;
   z-index: 200;
+  font-family: "Assistant", sans-serif;
 }
 
 .Nav {
@@ -857,7 +859,7 @@ input:focus {
   z-index: 1000;
   overflow: hidden;
   box-shadow: 0 0 15px rgba(101, 119, 134, 0.2),
-    0 0 3px 1px rgba(101, 119, 134, 0.15);
+  0 0 3px 1px rgba(101, 119, 134, 0.15);
   display: flex;
   flex-direction: column;
 }
@@ -1139,6 +1141,7 @@ input:focus {
   color: #363a3d;
   margin-bottom: 10px;
   word-break: break-word;
+  color: #111;
 }
 
 .post-link {
@@ -1227,7 +1230,7 @@ input:focus {
   display: flex;
   transition: 0.2s ease-in-out;
   will-change: background-color;
-  padding: 10px 15px;
+  padding: 10px 15px; 
 }
 
 .inner-card-wrapper:hover {
@@ -1270,13 +1273,16 @@ input:focus {
   color: rgb(15, 20, 25);
 }
 
+.card-header-username a{font-size: 15px;color: rgb(83, 100, 113);}
+
 .card-header-dot {
-  padding: 0 5px;
+  padding: 0 1px;
   color: #657786;
 }
 
 .card-header-date {
-  color: #657786;
+  color: rgb(83, 100, 113);
+  font-size: 14px;
 }
 
 .card-content-images {
@@ -2262,7 +2268,7 @@ input:focus {
   font-weight: 600;
   border: 1px solid #e6ecf0;
   box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12),
-    0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+  0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
   display: inline-block;
   padding: 8px 14px;
   border-radius: 200px;
@@ -3416,7 +3422,7 @@ body.dark_mode .Nav-item-hover:hover svg {
 
 body.dark_mode .rewards_daily_sec {
   box-shadow: 0 0 15px rgba(101, 119, 134, 0.2),
-    0 0 3px 1px rgba(101, 119, 134, 0.15);
+  0 0 3px 1px rgba(101, 119, 134, 0.15);
 }
 
 body.dark_mode .database-icon svg,
@@ -4043,7 +4049,7 @@ body.dark_mode .reward_pool {
   z-index: 1;
   transition: 0.2s ease;
   box-shadow: rgba(101, 119, 134, 0.2) 0px 0px 15px,
-    rgba(101, 119, 134, 0.15) 0px 0px 3px 1px;
+  rgba(101, 119, 134, 0.15) 0px 0px 3px 1px;
   min-width: 230px;
   opacity: 0;
   visibility: hidden;
@@ -4366,3 +4372,4 @@ body.dark_mode .reward_pool {
 .blink {
   color: rgb(29, 155, 240)
 }
+@import url('https://fonts.googleapis.com/css2?family=Assistant:wght@500&family=Noto+Sans:wght@500&family=PT+Sans:wght@700&display=swap');
