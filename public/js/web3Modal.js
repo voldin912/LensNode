@@ -338,6 +338,10 @@ window.onload = () => {
     }
 
     function parseCookies(cookies = '') {
+      if (!cookies) {
+        return {}
+      }
+
       return cookies.split('; ').reduce((map, cookie) => {
         const [key, value] = cookie.split('=')
 
@@ -348,7 +352,7 @@ window.onload = () => {
     }
 
     function redirectToPath(path = '') {
-      return window.location?.replace(`${window.location.origin}/{path}`)
+      return window?.location?.replace(`${window.location.origin}/{path}`)
     }
 
 
