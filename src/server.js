@@ -1,6 +1,6 @@
 import express from "express";
 import cookieParser from 'cookie-parser'
-import router from "./src/routes/main";
+import router from "./routes/main";
 import path from "path";
 import http from "http";
 import https from "https";
