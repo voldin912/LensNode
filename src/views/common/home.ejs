@@ -3,9 +3,9 @@ const IPFS_GATEWAY = 'https://gateway.ipfscdn.io/ipfs/';
 const userHandle = (article.profile.handle).replace('.lens', "")
 const userImg = article.profile.picture?.original?.url 
 const contentMedia = article.metadata.media
-const content = (article.metadata?.content).replace(/(?:\r\n|\r|\n)/g, '<br>')
+const content = text_truncate(article.metadata?.content, 300)
 const linkyfyOptions = {truncate: 26,className:'blink',formatHref: {
-    hashtag: (val) => `https://www.twitter.com/hashtag/${val.substr(1)}`,
+    hashtag: (val) => `/hashtag/${val.substr(1)}`,
     mention: (val) => `https://github.com/${val.substr(1)}`
   }}
 %>

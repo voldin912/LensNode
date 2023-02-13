@@ -62,7 +62,7 @@ query {
   explorePublications(request: {
     sortCriteria: LATEST,
     publicationTypes: [POST],
-    limit: 20
+    limit: 50
   }) {
     items {
       __typename

@@ -2,16 +2,16 @@ import express from 'express'
 const router = express.Router()
 import { getProfile , getPublications} from '../apis/apolloClient'
 import { getCleanedProfile } from '../utils/ipfsCleaningUtility';
+import { text_truncate } from '../utils/text_truncate';
 import moment from 'moment'
 import * as linkify from 'linkifyjs'
 import linkifyHtml from "linkify-html";
 import'linkify-plugin-hashtag'
 import'linkify-plugin-mention'
 
-
 router.get('', async (req, res) => {
 	const data = await getPublications();
-	res.render('index', { articles: data, moment: moment, linkifyHtml: linkifyHtml})
+	res.render('index', { articles: data, moment: moment, linkifyHtml: linkifyHtml, text_truncate: text_truncate})
 });
 
 router.get('/profile/:name', async (req, res) => {
