@@ -1,5 +1,5 @@
 import { ApolloClient, InMemoryCache, HttpLink, createHttpLink } from '@apollo/client/core/index.js';
-import { QUERY_PROFILE_BY_ID, GET_PUBLICATIONS_QUERY } from './queries';
+import { QUERY_PROFILE_BY_ID, GET_PUBLICATIONS_QUERY, GET_SINGLE_POST } from './queries';
 import { REFRESH_TOKEN_MUTATION } from './mutations';
 import fetch from 'cross-fetch';
 
@@ -51,4 +51,13 @@ const refresh = async refreshToken => {
     }
 }
 
-export { getProfile, getPublications, refresh };
+const getPublication = async (id) => {
+    const { data } = await client.query({
+        query: GET_SINGLE_POST,
+        variables: { id: id }
+    });
+    console.log(data.publication)
+    return data.publication;
+};
+
+export { getProfile, getPublications, getPublication, refresh };
