@@ -1,16 +1,22 @@
-import { getProfile, getPublications } from '../apis/apolloClient'
-import { getCleanedProfile } from '../utils/ipfsCleaningUtility';
-import { text_truncate } from '../utils/text_truncate';
 import moment from 'moment'
 import * as linkify from 'linkifyjs'
 import linkifyHtml from "linkify-html";
 import 'linkify-plugin-hashtag'
 import 'linkify-plugin-mention'
+import { getProfile, getPublications } from '../apis/apolloClient'
+import { getCleanedProfile, text_truncate } from '../utils';
+import { authenticate } from '../middlewares/authenticate'
 
 export default router => {
-	router.get('', async (req, res) => {
+	router.get('', authenticate, async (req, res) => {
 		const data = await getPublications();
-		res.render('index', { articles: data, moment: moment, linkifyHtml: linkifyHtml, text_truncate: text_truncate })
+		res.render('index', {
+			articles: data,
+			moment: moment,
+			linkifyHtml: linkifyHtml,
+			text_truncate: text_truncate,
+			authenticated: true
+		})
 	});
 
 	router.get('/profile/:name', async (req, res) => {
