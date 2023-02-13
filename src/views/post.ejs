@@ -1,0 +1,71 @@
+<%- include('./common/header')%>
+<%	
+	console.log(post)
+	 const IPFS_GATEWAY = 'https://gateway.ipfscdn.io/ipfs/';
+	const userHandle = (post.profile.handle).replace('.lens', "")
+	const userImg = post.profile.picture?.original?.url 
+	const contentMedia = post.metadata?.media
+
+%>
+	<div id="root">
+		<div class="body-wrap" style="">
+			<main class="main">
+				<div class="middle-section ms-width">
+					<div class="Home-wrapper"><%- include('./common/topnav') %>
+						<div class="inner-wrapper">
+	                        <div class="post-header-wrapper back_sec">
+	                            <div class="back_btn">
+	                                <span class="middle-header-content">Post</span>
+	                            </div>
+	                        </div>
+	                        <div class="inner-body-wrapper">
+	                            <div class="post-header-content">
+	                                <div class="profile-user-pic">
+	                                    <a href="/profile/<%- userHandle %>">
+	                                        <% if(userImg){ %>
+	                                        <img alt="" width="100%" height="49px" src="<%- userImg.replace('ipfs://', IPFS_GATEWAY); %>" class="home_pro_pic" />
+	                                        <%}else{%>
+	                                        <img alt="" width="100%" height="49px" src="https://i.postimg.cc/MZdNmMMN/user.png" class="home_pro_pic" />
+	                                        <%}%>
+	                                    </a>
+	                                </div>
+	                                <div class="profile-user-wrap">
+                                    	<span class="profile-user-name">
+                                        	<a href="/profile/<%- userHandle %>">@<%- post.profile.name %></a>
+                                    	</span>
+                                    	<span class="card-header-dot">·</span>
+                                    	<span class="card-header-date"><%- moment.utc(post.createdAt).fromNow()%></span>
+	                                </div>
+	                            </div>
+	                        </div>
+	                        <div class="post-content">
+	                            <p><%- post.metadata?.content %></p>
+	                        </div>
+	                        <%  if(contentMedia.length !==0){  
+	                            let mediaUrl = contentMedia[0].original?.url;
+	                            if(mediaUrl.includes('ipfs://')){
+	                                mediaUrl=mediaUrl.replace('ipfs://', IPFS_GATEWAY)
+	                            } else {mediaUrl=mediaUrl} 
+	                        %>
+	                        <div class="post-image-wrapper">
+	                            <a href="/post/<%-  %>/<%-  %>">
+	                                <div class="card-image-link">
+	                                    <img alt="<%- %>" src="<%- mediaUrl %>">
+	                                </div>
+	                            </a>
+	                        </div>
+	                        <%}else{}%>
+	                        <div class="post-link">
+	                            <a href="<%-  %>" target="_blank"><%- post.appId %></a>
+	                        </div>
+	                    </div>
+	                </div>
+				</div>
+				<%- include('./common/rnav') %>
+			</main>
+			<%- include('./common/lnav') %>
+		</div>
+	</div>
+<%- include('./common/footer') %>
+
+

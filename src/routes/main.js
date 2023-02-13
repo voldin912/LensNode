@@ -2,7 +2,7 @@ import moment from 'moment'
 import linkifyHtml from "linkify-html";
 import 'linkify-plugin-hashtag'
 import 'linkify-plugin-mention'
-import { getProfile, getPublications } from '../apis/apolloClient'
+import { getProfile, getPublications, getPublication } from '../apis/apolloClient'
 import { getCleanedProfile, text_truncate } from '../utils';
 import { authenticate } from '../middlewares/authenticate'
 
@@ -29,6 +29,17 @@ export default router => {
 		if (data && data.profile) {
 			const profileData = getCleanedProfile(data.profile);
 			res.render('profile', { user: profileData });
+		} else {
+			res.status(404).render('common/404');
+		}
+	})
+
+	router.get('/:name/status/:link', async (req, res) => {
+		const name = req.params.name
+		const link = req.params.link
+		const data = await getPublication(link);
+		if (data) { 
+			res.render('post', { post: data,moment: moment });
 		} else {
 			res.status(404).render('common/404');
 		}

@@ -56,7 +56,7 @@ const getPublication = async (id) => {
         query: GET_SINGLE_POST,
         variables: { id: id }
     });
-    console.log(data.publication)
+    //console.log(data.publication)
     return data.publication;
 };
 
