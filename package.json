@@ -3,10 +3,10 @@
   "name": "koneckt",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon --es-module-specifier-resolution=node src/server.js"
+    "start": "nodemon --es-module-specifier-resolution=node src/index.js"
   },
   "author": "",
   "license": "ISC",
