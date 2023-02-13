@@ -1,17 +1,22 @@
 import express from "express";
 import cookieParser from 'cookie-parser'
-import router from "./routes/main";
 import path from "path";
 import http from "http";
 import https from "https";
 import fs from "fs";
 import { fileURLToPath } from "url";
+import routes from "./routes";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const router = express.Router()
+
+routes(router)
+
 const app = express();
 
 app.use(cookieParser())
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 app.use(express.static("public"));
 app.use("/css", express.static(`${__dirname}/public/css`));
