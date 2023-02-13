@@ -79,7 +79,9 @@ window.onload = () => {
         if (window.ethereum?.selectedAddress) {
           address = window.ethereum.selectedAddress
 
-          if (!localStorage.getItem('accessToken')) {
+          const cookies = parseCookies(document.cookie)
+
+          if (!cookies['accessToken']) {
             triggerModalById('#lens-connect-modal')
           }
         } else {
@@ -235,7 +237,7 @@ window.onload = () => {
 
     /**
      * Login user to https://www.lens.xyz/
-     * and set accessToken and refreshToken to local storage
+     * and set accessToken and refreshToken to cookies
      */
     async function authenticateToLens() {
       const cookies = parseCookies(document.cookie)

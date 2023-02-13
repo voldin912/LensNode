@@ -14,7 +14,7 @@
 									<div class="Nav-item">Home</div>
 								</div>
 							</a>
-							<% if(loguser){ %>
+							<% if(locals.connected){ %>
 								<a class="Nav-link" href="/explore" aria-label="explore">
 									<div class="Nav-item-hover" id="explore"><svg viewBox="0 0 24 24">
 											<g>
@@ -244,7 +244,7 @@
 									</div>
 									<% } %>
 										<div class="Nav-main">
-											<% if(loguser){ %>
+											<% if(locals.connected){ %>
 												<div class="Nav-entry-link" id="new_post_btn" data-ctModalTrigger="#tweet-modal">
 													<div class="Nav-main-btn">POST</div>
 												</div>
