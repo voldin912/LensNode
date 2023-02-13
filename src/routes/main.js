@@ -5,7 +5,8 @@ import { getCleanedProfile } from '../utils/ipfsCleaningUtility';
 import moment from 'moment'
 import * as linkify from 'linkifyjs'
 import linkifyHtml from "linkify-html";
-
+import'linkify-plugin-hashtag'
+import'linkify-plugin-mention'
 
 
 router.get('', async (req, res) => {

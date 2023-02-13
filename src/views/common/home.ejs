@@ -3,6 +3,11 @@ const IPFS_GATEWAY = 'https://gateway.ipfscdn.io/ipfs/';
 const userHandle = (article.profile.handle).replace('.lens', "")
 const userImg = article.profile.picture?.original?.url 
 const contentMedia = article.metadata.media
+const content = (article.metadata?.content).replace(/(?:\r\n|\r|\n)/g, '<br>')
+const linkyfyOptions = {truncate: 26,className:'blink',formatHref: {
+    hashtag: (val) => `https://www.twitter.com/hashtag/${val.substr(1)}`,
+    mention: (val) => `https://github.com/${val.substr(1)}`
+  }}
 %>
   <div class="inner-card-wrapper">
     <div class="card-userPic-wrapper">
@@ -23,7 +28,7 @@ const contentMedia = article.metadata.media
           <span class="card-header-date"><%- moment.utc(article.createdAt).fromNow() %></span>
         </div>
       </div>
-      <div class="post-content"><p><%- linkifyHtml(article.metadata?.content).replace(/(?:\r\n|\r|\n)/g, '<br>') %></p></div>
+      <div class="post-content"><p><%- linkifyHtml(content, linkyfyOptions) %></p></div>
       <% if(contentMedia.length !==0){ 
         let mediaUrl = contentMedia[0].original?.url;
         if(mediaUrl.includes('ipfs://')){mediaUrl=mediaUrl.replace('ipfs://', IPFS_GATEWAY)}else{mediaUrl=mediaUrl}%>
