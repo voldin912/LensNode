@@ -22,7 +22,6 @@
     "linkify-html": "^4.1.0",
     "linkify-plugin-hashtag": "^4.1.0",
     "linkify-plugin-mention": "^4.1.0",
-    "linkifyjs": "^4.1.0",
     "markdown-it": "^13.0.1",
     "moment": "^2.29.4",
     "nodemon": "^2.0.20"

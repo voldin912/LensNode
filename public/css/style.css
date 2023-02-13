@@ -1276,24 +1276,24 @@ input:focus {
 
 .card-content-images {
   margin-top: 10px;
-  border: 1px solid #ccd6dd;
+  /*border: 1px solid #ccd6dd;*/
   border-radius: 14px;
 }
 
 .card-image-link {
   cursor: pointer;
   display: block;
-  max-height: 253px;
+  /*max-height: 253px;*/
   border-radius: 14px;
 }
 
 .card-image-link img {
-  max-height: 253px;
+  /*max-height: 253px;*/
   border-radius: 14px;
   width: 100%;
   height: auto;
   object-fit: cover;
-  aspect-ratio: 16/9;
+  /*aspect-ratio: 16/9;*/
 }
 
 .card-buttons-wrapper {
