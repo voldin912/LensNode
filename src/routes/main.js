@@ -11,7 +11,7 @@ import { authenticate } from '../middlewares/authenticate'
 // 2. add "connected: true" to "res.render" options
 
 export default router => {
-	router.get('', authenticate, async (req, res) => {
+	router.get('', async (req, res) => {
 		const data = await getPublications();
 		res.render('index', {
 			articles: data,
