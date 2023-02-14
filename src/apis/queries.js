@@ -1,5 +1,7 @@
 import { gql } from '@apollo/client/core';
 
+
+
 const QUERY_PROFILE_BY_ID = gql`
   query Profile($profileRequest: SingleProfileQueryRequest!) {
     profile(request: $profileRequest) {
@@ -476,4 +478,97 @@ fragment ReferenceModuleFields on ReferenceModule {
   }
 }
 `
-export { QUERY_PROFILE_BY_ID, GET_PUBLICATIONS_QUERY, GET_SINGLE_POST };
+const GET_POST_COMMENTS = gql`
+query Publications($publicationsRequest: PublicationsQueryRequest!) {
+  publications(request: $publicationsRequest) {
+      items {
+      ... on Comment {
+        ...CommentFields
+      }
+    }
+    }
+  }
+fragment MediaFields on Media {
+  url
+  mimeType
+}
+
+fragment MetadataOutputFields on MetadataOutput {
+  name
+  description
+  content
+  media {
+    original {
+      ...MediaFields
+    }
+  }
+  attributes {
+    displayType
+    traitType
+    value
+  }
+}
+
+fragment CommentBaseFields on Comment {
+  id
+  createdAt
+  appId
+  hidden
+  reaction(request: null)
+  mirrors(by: null)
+  hasCollectedByMe
+  profile {
+    ...ProfileFields
+  }
+  metadata {
+    ...MetadataOutputFields
+  }
+  stats {
+    ...PublicationStatsFields
+  }
+
+}
+
+fragment PublicationStatsFields on PublicationStats { 
+  totalAmountOfMirrors
+  totalAmountOfCollects
+  totalAmountOfComments
+  totalUpvotes
+}
+
+fragment CommentFields on Comment {
+  ...CommentBaseFields
+
+}
+
+fragment ProfileFields on Profile {
+  id
+  name
+  handle
+  bio
+  ownedBy
+  isFollowedByMe
+  stats {
+    totalFollowers
+    totalFollowing
+  }
+  attributes {
+    key
+    value
+  }
+  picture {
+    ... on MediaSet {
+      original {
+        url
+      }
+    }
+    ... on NftImage {
+      uri
+    }
+  }
+  followModule {
+    __typename
+  }
+}
+`
+export { QUERY_PROFILE_BY_ID, GET_PUBLICATIONS_QUERY, GET_SINGLE_POST, GET_POST_COMMENTS };

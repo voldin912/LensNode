@@ -2,9 +2,14 @@ import moment from 'moment'
 import linkifyHtml from "linkify-html";
 import 'linkify-plugin-hashtag'
 import 'linkify-plugin-mention'
-import { getProfile, getPublications, getPublication } from '../apis/apolloClient'
+import { getProfile, getPublications, getPublication, getComments } from '../apis/apolloClient'
 import { getCleanedProfile, text_truncate } from '../utils';
 import { authenticate } from '../middlewares/authenticate'
+
+
+import { Lens } from 'lens-protocol';
+
+
 
 // all you need to do now to protect any route and make use of it inside of ejs part:
 // 1. add "authenticate" as a middleware for your route
@@ -38,8 +43,15 @@ export default router => {
 		const name = req.params.name
 		const link = req.params.link
 		const data = await getPublication(link);
+		const comments = await getComments(link)
 		if (data) { 
-			res.render('post', { post: data,moment: moment });
+			res.render('post', { 
+				post: data, 
+				moment: moment,
+				comments: comments,
+				linkifyHtml: linkifyHtml,
+				text_truncate: text_truncate
+			});
 		} else {
 			res.status(404).render('common/404');
 		}

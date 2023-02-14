@@ -1,5 +1,5 @@
 import { ApolloClient, InMemoryCache, HttpLink, createHttpLink } from '@apollo/client/core/index.js';
-import { QUERY_PROFILE_BY_ID, GET_PUBLICATIONS_QUERY, GET_SINGLE_POST } from './queries';
+import { QUERY_PROFILE_BY_ID, GET_PUBLICATIONS_QUERY, GET_SINGLE_POST, GET_POST_COMMENTS } from './queries';
 import { REFRESH_TOKEN_MUTATION } from './mutations';
 import fetch from 'cross-fetch';
 
@@ -60,4 +60,15 @@ const getPublication = async (id) => {
     return data.publication;
 };
 
-export { getProfile, getPublications, getPublication, refresh };
+const getComments = async (id) => {
+    const { data } = await client.query({
+        query: GET_POST_COMMENTS,
+        variables: {
+            publicationsRequest: { commentsOf: id, limit: 10 }
+        }
+    });
+    //console.log(data.publications.items)
+    return data.publications.items;
+};
+
+export { getProfile, getPublications, getPublication, refresh, getComments };
