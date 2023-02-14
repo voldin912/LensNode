@@ -6,7 +6,7 @@
   const content = text_truncate(article.metadata?.content, 300)
   const linkyfyOptions = {truncate: 26,className:'blink',nl2br:true,formatHref: {
     hashtag: (val) => `/hashtag/${val.substr(1)}`,
-    mention: (val) => `https://github.com/${val.substr(1)}`
+    mention: (val) => `/profile/${val.substr(1)}`
   }}
 %>
 <div class="inner-card-wrapper">

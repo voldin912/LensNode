@@ -6,6 +6,10 @@
 	const userHandle = (post.profile.handle).replace('.lens', "")
 	const userImg = post.profile.picture?.original?.url 
 	const contentMedia = post.metadata?.media
+	const linkyfyOptions = {truncate: 26,className:'blink',nl2br:true,formatHref: {
+	    hashtag: (val) => `/hashtag/${val.substr(1)}`,
+		mention: (val) => `/profile/${val.substr(1)}`
+	}}
 %>
 	<div id="root">
 		<div class="body-wrap" style="">
@@ -37,7 +41,7 @@
 	                            </div>
 	                        </div>
 	                        <div class="post-content">
-	                            <p><%- post.metadata?.content %></p>
+	                            <p><%- linkifyHtml(post.metadata?.content, linkyfyOptions) %></p>
 	                        </div>
 	                        <%  if(contentMedia.length !==0){  
 	                            let mediaUrl = contentMedia[0].original?.url;
