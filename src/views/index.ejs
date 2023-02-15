@@ -1,19 +1,26 @@
 <%- include('./common/header') %>
-	<div id="root">
-		<div class="body-wrap" style="">
-			<main class="main">
-				<div class="middle-section ms-width">
-					<div class="Home-wrapper"><%- include('./common/topnav') %>
-						<div class="explore-nav-menu">
-							<div class="explore-nav-item activeTab">Latest</div>
-							<div class="explore-nav-item" onclick="window.location.href='/trending'">Trending</div></div>
-							<%- include('./common/home')%>
-						</div>
-					<div class="loader loader-hidden"></div>
-				</div>
-				<%- include('./common/rnav') %>
-			</main>
-			<%- include('./common/lnav') %>
-		</div>
-	</div>
+<div id="root">
+  <div class="body-wrap" style="">
+    <main class="main">
+      <div class="middle-section ms-width">
+        <div class="Home-wrapper">
+          <%- include('./common/topnav') %>
+          <div class="explore-nav-menu">
+            <div class="explore-nav-item activeTab">Latest</div>
+            <div
+              class="explore-nav-item"
+              onclick="window.location.href='/trending'"
+            >
+              Trending
+            </div>
+          </div>
+          <%- include('./common/home')%>
+        </div>
+        <div class="loader loader-hidden"></div>
+      </div>
+      <%- include('./common/rnav') %>
+    </main>
+    <%- include('./common/lnav') %>
+  </div>
+</div>
 <%- include('./common/footer') %>
