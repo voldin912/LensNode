@@ -6,7 +6,8 @@
  * - browser extension: https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn/related?hl=en
  */
 
-const LENS_API = 'https://api.lens.dev'
+// const LENS_API = 'https://api.lens.dev'
+const LENS_API = 'https://api-mumbai.lens.dev'
 
 window.onload = () => {
   setTimeout(() => {
@@ -312,7 +313,7 @@ window.onload = () => {
 
           document.querySelector("#lens-connect-modal").classList.remove('show')
 
-          await checkLensProfiles()
+          await setLensProfileOrTriggerModal()
         } else {
           document.querySelector("#lens-connect-modal").classList.remove('show')
         }
@@ -322,10 +323,23 @@ window.onload = () => {
       }
     }
 
-    async function checkLensProfiles() {
+    async function setLensProfileOrTriggerModal() {
       const profiles = await getProfiles()
 
-      if (!profiles?.length) {
+      if (profiles?.length) {
+        const [currentProfile] = profiles
+          ?.slice()
+          ?.sort((a, b) => Number(a.id) - Number(b.id))
+          ?.sort((a, b) => (a.isDefault === b.isDefault ? 0 : a.isDefault ? -1 : 1));
+
+        // we can store all profiles data
+        // we can store current profile data
+
+        // we can store current profile id
+        if (currentProfile?.id) {
+          document.cookie = `lensCurrentProfileId=${currentProfile.id}`
+        }
+      } else {
         triggerModalById('#lens-claim-modal')
       }
     }
