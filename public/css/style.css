@@ -4442,3 +4442,4 @@ body.dark_mode .reward_pool {
   color: rgb(29, 155, 240);
 }
 @import url("https://fonts.googleapis.com/css2?family=Assistant:wght@500&family=Noto+Sans:wght@500&family=PT+Sans:wght@700&display=swap");
+.reply-sec{padding-top: 20px;padding-bottom: 20px;border-top: 1px solid #e6ecf0;margin-bottom: 10px;border-bottom: 1px solid #e6ecf0;}

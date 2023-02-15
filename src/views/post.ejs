@@ -1,7 +1,6 @@
 <%- include('./common/header')%>
 <%	
 	//console.log(post)
-	console.log(comments)
 	const IPFS_GATEWAY = 'https://gateway.ipfscdn.io/ipfs/';
 	const userHandle = (post.profile.handle).replace('.lens', "")
 	const userImg = post.profile.picture?.original?.url 
@@ -93,11 +92,9 @@
 						        </div>
 						      </div>
 						    </div>
-
-
-
-						    <!--here comments -->
-
+						    <div class="reply-sec">
+	                        	<%- include('./common/reply') %>
+	                        </div>
 						    <%- include('./common/comments') %>
 	                    </div>
 	                </div>
