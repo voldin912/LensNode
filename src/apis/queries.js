@@ -1,7 +1,5 @@
 import { gql } from '@apollo/client/core';
 
-
-
 const QUERY_PROFILE_BY_ID = gql`
   query Profile($profileRequest: SingleProfileQueryRequest!) {
     profile(request: $profileRequest) {
@@ -57,7 +55,7 @@ const QUERY_PROFILE_BY_ID = gql`
       }
     }
   }
-`;
+`
 
 const GET_PUBLICATIONS_QUERY = gql`
   query {
@@ -132,7 +130,6 @@ const GET_PUBLICATIONS_QUERY = gql`
     appId
   }
 `
-
 
 const GET_SINGLE_POST = gql`
 query Publication($id: InternalPublicationId!) {
@@ -478,6 +475,7 @@ fragment ReferenceModuleFields on ReferenceModule {
   }
 }
 `
+
 const GET_POST_COMMENTS = gql`
 query Publications($publicationsRequest: PublicationsQueryRequest!) {
   publications(request: $publicationsRequest) {
@@ -571,4 +569,88 @@ fragment ProfileFields on Profile {
   }
 }
 `
-export { QUERY_PROFILE_BY_ID, GET_PUBLICATIONS_QUERY, GET_SINGLE_POST, GET_POST_COMMENTS };
+
+const HAS_TX_HASH_BEEN_INDEXED = gql`
+  query hasTxHashBeenIndexed($request: HasTxHashBeenIndexedRequest!) {
+    hasTxHashBeenIndexed(request: $request) {
+      __typename
+      ... on TransactionIndexedResult {
+        indexed
+        txReceipt {
+          to
+          from
+          contractAddress
+          transactionIndex
+          root
+          gasUsed
+          logsBloom
+          blockHash
+          transactionHash
+          blockNumber
+          confirmations
+          cumulativeGasUsed
+          effectiveGasPrice
+          byzantium
+          type
+          status
+          logs {
+            blockNumber
+            blockHash
+            transactionIndex
+            removed
+            address
+            data
+            topics
+            transactionHash
+            logIndex
+          }
+        }
+        metadataStatus {
+          status
+          reason
+        }
+      }
+      ... on TransactionError {
+        reason
+        txReceipt {
+          to
+          from
+          contractAddress
+          transactionIndex
+          root
+          gasUsed
+          logsBloom
+          blockHash
+          transactionHash
+          blockNumber
+          confirmations
+          cumulativeGasUsed
+          effectiveGasPrice
+          byzantium
+          type
+          status
+          logs {
+            blockNumber
+            blockHash
+            transactionIndex
+            removed
+            address
+            data
+            topics
+            transactionHash
+            logIndex
+          }
+        }
+      }
+    }
+  }
+
+`
+
+export {
+  QUERY_PROFILE_BY_ID,
+  GET_PUBLICATIONS_QUERY,
+  GET_SINGLE_POST,
+  GET_POST_COMMENTS,
+  HAS_TX_HASH_BEEN_INDEXED
+}
