@@ -16,7 +16,7 @@ import { Lens } from 'lens-protocol';
 // 2. add "connected: true" to "res.render" options
 
 export default router => {
-	router.get('', async (req, res) => {
+	router.get('/', authenticate, async (req, res) => {
 		const data = await getPublications();
 		res.render('index', {
 			articles: data,
@@ -44,9 +44,9 @@ export default router => {
 		const link = req.params.link
 		const data = await getPublication(link);
 		const comments = await getComments(link)
-		if (data) { 
-			res.render('post', { 
-				post: data, 
+		if (data) {
+			res.render('post', {
+				post: data,
 				moment: moment,
 				comments: comments,
 				linkifyHtml: linkifyHtml,
