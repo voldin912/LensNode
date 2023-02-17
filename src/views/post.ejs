@@ -11,7 +11,7 @@
 	}}
 %>
 	<div id="root">
-		<div class="body-wrap" style="">
+		<div class="body-wrap">
 			<main class="main">
 				<div class="middle-section ms-width">
 					<div class="Home-wrapper"><%- include('./common/topnav') %>
@@ -22,7 +22,7 @@
 	                            </div>
 	                        </div>
 	                        <div class="inner-body-wrapper">
-	                            <div class="post-header-content">
+	                            <div class="post-header-content p_relative">
 	                                <div class="profile-user-pic">
 	                                    <a href="/profile/<%- userHandle %>">
 	                                        <% if(userImg){ %>
@@ -32,11 +32,42 @@
 	                                        <%}%>
 	                                    </a>
 	                                </div>
-	                                <div class="profile-user-wrap">
-                                    	<span class="profile-user-name">
-                                        	<a href="/profile/<%- userHandle %>"><b><%- post.profile?.name %></b>@<%- userHandle %></a>
-                                    	</span>
+	                                <div class="profile-user-wrap user_name">
+                                        	<h5><a href="/profile/<%- userHandle %>"><b><%- post.profile?.name %></b><%- userHandle %></a></h5>
+											<span>@abdullah</span>
 	                                </div>
+									<div class="post_header-dropdown-wrap p_absolute drop_down">
+										<span class="three_dot-wrapper drop_down_trigger" ><svg class="three_dot p_relative" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#000000" viewBox="0 0 16 16">
+											<path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"></path>
+										</svg></span>
+
+										<ul class="drop-up-menu drop_down_content" data-pointer="false">
+											<li><a href="#">lorem 2	dfsf</a></li>
+											<li><a href="#">Log out @mrhripon98</a></li>
+										</ul>
+									</div>
+
+
+									<script>
+										if(document.querySelector('.drop_down .drop_down_trigger') !== null) {
+											function dropdownFn(e) {
+												e.preventDefault();
+												this.parentElement.querySelector('.drop_down_content').classList.add('show');
+											}
+											const dropDownWrap = document.querySelectorAll('.drop_down .drop_down_trigger');
+											dropDownWrap.forEach(single=>single.addEventListener('click', dropdownFn))
+										}
+										// Function for hide any user dropupmenu hide on outside click 
+											document.addEventListener('click', function (event) {
+												const dropdownTriggers = document.querySelectorAll('.drop_down .drop_down_trigger');
+												dropdownTriggers.forEach(each=>{
+													if (!each.contains(event.target)) {
+													document.querySelectorAll('.drop_down_content').forEach(each=>each.classList.remove('show'))
+												}
+												})
+												
+											});
+									</script>
 	                            </div>
 	                        </div>
 	                        <div class="post-content">

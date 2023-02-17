@@ -4268,8 +4268,16 @@ body.dark_mode .reward_pool {
   width: 130px;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-weight: 500;
 }
-
+.profile-user-wrap.user_name h5 a {
+  display: inline-block;
+  text-transform: capitalize;
+}
+.profile-user-wrap.user_name {
+  margin-top: -5px;
+  display: block;
+}
 .user_name {
   margin-top: -2px;
 }
@@ -4338,7 +4346,63 @@ body.dark_mode .reward_pool {
   z-index: 1;
   position: absolute;
 }
+.p_relative {
+  position: relative !important;
+}
+.p_absolute {
+  position: absolute !important;
+}
+.post_header-dropdown-wrap {
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+.drop_down_content[data-pointer="false"]::before,
+.drop_down_content[data-pointer="false"]::after {
+  content: none;
+}
+.drop_down_content {
+  right: 0;
+  left: auto;
+  top: 0;
+  background-color: #fff;
+  bottom: auto !important;
+}
+.drop_down_trigger {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  cursor: pointer;
+}
+.drop_down_trigger svg {
+  transform: none;
+  position: unset !important;
+  display: block;
+}
 
+.single_search input {
+  width: 100%;
+  border: 1px solid #e6ecf0;
+  border-radius: 40px;
+  height: 42px;
+  padding-left: 36px;
+  padding-right: 15px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #000;
+}
+.single_search .search_icon {
+  left: 13px;
+  top: 54%;
+  transform: translateY(-50%);
+}
+.padding_wrap {
+  padding: 24px 0;
+}
+.mt-0 {
+  margin-top: 0 !important;
+}
 @media screen and (max-width: 1285px) {
   .user_name,
   .three_dot {
@@ -4442,4 +4506,10 @@ body.dark_mode .reward_pool {
   color: rgb(29, 155, 240);
 }
 @import url("https://fonts.googleapis.com/css2?family=Assistant:wght@500&family=Noto+Sans:wght@500&family=PT+Sans:wght@700&display=swap");
-.reply-sec{padding-top: 20px;padding-bottom: 20px;border-top: 1px solid #e6ecf0;margin-bottom: 10px;border-bottom: 1px solid #e6ecf0;}
+.reply-sec {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  border-top: 1px solid #e6ecf0;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #e6ecf0;
+}
