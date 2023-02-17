@@ -1,3 +1,4 @@
+// decoded token has these properties: { id, role, iat, exp }
 export const decodeJWT = (token = '') => {
   if (!token) {
     return null

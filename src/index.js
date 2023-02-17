@@ -1,3 +1,6 @@
+import * as dotenv from 'dotenv'
+dotenv.config()
+
 import express from "express";
 import cookieParser from 'cookie-parser'
 import path from "path";
@@ -5,6 +8,7 @@ import http from "http";
 import https from "https";
 import fs from "fs";
 import { fileURLToPath } from "url";
+import chalk from 'chalk'
 import routes from "./routes";
 
 const router = express.Router()
@@ -76,5 +80,5 @@ server.on("listening", () => {
   const addr = server.address();
   const port = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
 
-  console.info(`App listening on port ${port} ${link}`);
+  console.info(`${chalk.blue(`App listening on port ${port}`)} ${chalk.yellow(link)}`);
 });
