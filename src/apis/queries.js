@@ -1,4 +1,21 @@
-import { gql } from '@apollo/client/core';
+import gql from 'graphql-tag';
+import { 
+  publicationStatsFragment, 
+  profileFieldsFragment, 
+  postFieldsFragment, 
+  mediaFieldsFragment,
+  metadataOutputFragment,
+  referenceModuleFragment,
+  commentBaseFieldsFragment,
+  erc20Fragment,
+  followModuleFragment,
+  collectModuleFragment,
+  commentFieldsFragment,
+  mirrorBaseFieldsFragment,
+  mirrorFieldsFragment,
+  commentMirrorOfFieldsFragment
+  } 
+from './fragments';
 
 const QUERY_PROFILE_BY_ID = gql`
   query Profile($profileRequest: SingleProfileQueryRequest!) {
@@ -72,63 +89,15 @@ const GET_PUBLICATIONS_QUERY = gql`
       }
     }
   }
-
-  fragment ProfileFields on Profile {
-    id
-    name
-    metadata
-    handle
-    picture {
-      ... on NftImage {
-        uri
-      }
-      ... on MediaSet {
-        original {
-          ...MediaFields
-        }
-      }
-    }
-    stats {
-      totalComments
-      totalMirrors
-      totalCollects
-    }
-  }
-
-  fragment MediaFields on Media {
-    url
-  }
-
-  fragment PublicationStatsFields on PublicationStats {
-    totalAmountOfMirrors
-    totalAmountOfCollects
-    totalAmountOfComments
-    totalUpvotes
-  }
-
-  fragment MetadataOutputFields on MetadataOutput {
-      content
-    media {
-      original {
-        ...MediaFields
-      }
-    }
-  }
-
-  fragment PostFields on Post {
-    id
-    profile {
-      ...ProfileFields
-    }
-    stats {
-      ...PublicationStatsFields
-    }
-    metadata {
-      ...MetadataOutputFields
-    }
-    createdAt
-    appId
-  }
+  ${publicationStatsFragment}
+  ${profileFieldsFragment}
+  ${postFieldsFragment}
+  ${mediaFieldsFragment}
+  ${metadataOutputFragment}
+  ${followModuleFragment}
+  ${collectModuleFragment}
+  ${referenceModuleFragment}
+  ${erc20Fragment}
 `
 
 const GET_SINGLE_POST = gql`
@@ -149,331 +118,20 @@ query Publication($id: InternalPublicationId!) {
   }
 }
 
-fragment MediaFields on Media {
-  url
-  mimeType
-}
-
-fragment ProfileFields on Profile {
-  id
-  name
-  bio
-  attributes {
-    displayType
-    traitType
-    key
-    value
-  }
-  isFollowedByMe
-  isFollowing(who: null)
-  followNftAddress
-  metadata
-  isDefault
-  handle
-  picture {
-    ... on NftImage {
-      contractAddress
-      tokenId
-      uri
-      verified
-    }
-    ... on MediaSet {
-      original {
-        ...MediaFields
-      }
-    }
-  }
-  coverPicture {
-    ... on NftImage {
-      contractAddress
-      tokenId
-      uri
-      verified
-    }
-    ... on MediaSet {
-      original {
-        ...MediaFields
-      }
-    }
-  }
-  ownedBy
-  dispatcher {
-    address
-  }
-  stats {
-    totalFollowers
-    totalFollowing
-    totalPosts
-    totalComments
-    totalMirrors
-    totalPublications
-    totalCollects
-  }
-  followModule {
-    ...FollowModuleFields
-  }
-}
-
-fragment PublicationStatsFields on PublicationStats { 
-  totalAmountOfMirrors
-  totalAmountOfCollects
-  totalAmountOfComments
-  totalUpvotes
-}
-
-fragment MetadataOutputFields on MetadataOutput {
-  name
-  description
-  content
-  media {
-    original {
-      ...MediaFields
-    }
-  }
-  attributes {
-    displayType
-    traitType
-    value
-  }
-}
-
-fragment Erc20Fields on Erc20 {
-  name
-  symbol
-  decimals
-  address
-}
-
-fragment PostFields on Post {
-  id
-  profile {
-    ...ProfileFields
-  }
-  stats {
-    ...PublicationStatsFields
-  }
-  metadata {
-    ...MetadataOutputFields
-  }
-  createdAt
-  collectModule {
-    ...CollectModuleFields
-  }
-  referenceModule {
-    ...ReferenceModuleFields
-  }
-  appId
-  hidden
-  reaction(request: null)
-  mirrors(by: null)
-  hasCollectedByMe
-}
-
-fragment MirrorBaseFields on Mirror {
-  id
-  profile {
-    ...ProfileFields
-  }
-  stats {
-    ...PublicationStatsFields
-  }
-  metadata {
-    ...MetadataOutputFields
-  }
-  createdAt
-  collectModule {
-    ...CollectModuleFields
-  }
-  referenceModule {
-    ...ReferenceModuleFields
-  }
-  appId
-  hidden
-  reaction(request: null)
-  hasCollectedByMe
-}
-
-fragment MirrorFields on Mirror {
-  ...MirrorBaseFields
-  mirrorOf {
-   ... on Post {
-      ...PostFields          
-   }
-   ... on Comment {
-      ...CommentFields          
-   }
-  }
-}
-
-fragment CommentBaseFields on Comment {
-  id
-  profile {
-    ...ProfileFields
-  }
-  stats {
-    ...PublicationStatsFields
-  }
-  metadata {
-    ...MetadataOutputFields
-  }
-  createdAt
-  collectModule {
-    ...CollectModuleFields
-  }
-  referenceModule {
-    ...ReferenceModuleFields
-  }
-  appId
-  hidden
-  reaction(request: null)
-  mirrors(by: null)
-  hasCollectedByMe
-}
-
-fragment CommentFields on Comment {
-  ...CommentBaseFields
-  mainPost {
-    ... on Post {
-      ...PostFields
-    }
-    ... on Mirror {
-      ...MirrorBaseFields
-      mirrorOf {
-        ... on Post {
-           ...PostFields          
-        }
-        ... on Comment {
-           ...CommentMirrorOfFields        
-        }
-      }
-    }
-  }
-}
-
-fragment CommentMirrorOfFields on Comment {
-  ...CommentBaseFields
-  mainPost {
-    ... on Post {
-      ...PostFields
-    }
-    ... on Mirror {
-       ...MirrorBaseFields
-    }
-  }
-}
-
-fragment FollowModuleFields on FollowModule {
-  ... on FeeFollowModuleSettings {
-    type
-    amount {
-      asset {
-        name
-        symbol
-        decimals
-        address
-      }
-      value
-    }
-    recipient
-  }
-  ... on ProfileFollowModuleSettings {
-    type
-    contractAddress
-  }
-  ... on RevertFollowModuleSettings {
-    type
-    contractAddress
-  }
-  ... on UnknownFollowModuleSettings {
-    type
-    contractAddress
-    followModuleReturnData
-  }
-}
-
-fragment CollectModuleFields on CollectModule {
-  __typename
-  ... on FreeCollectModuleSettings {
-    type
-    followerOnly
-    contractAddress
-  }
-  ... on FeeCollectModuleSettings {
-    type
-    amount {
-      asset {
-        ...Erc20Fields
-      }
-      value
-    }
-    recipient
-    referralFee
-  }
-  ... on LimitedFeeCollectModuleSettings {
-    type
-    collectLimit
-    amount {
-      asset {
-        ...Erc20Fields
-      }
-      value
-    }
-    recipient
-    referralFee
-  }
-  ... on LimitedTimedFeeCollectModuleSettings {
-    type
-    collectLimit
-    amount {
-      asset {
-        ...Erc20Fields
-      }
-      value
-    }
-    recipient
-    referralFee
-    endTimestamp
-  }
-  ... on RevertCollectModuleSettings {
-    type
-  }
-  ... on TimedFeeCollectModuleSettings {
-    type
-    amount {
-      asset {
-        ...Erc20Fields
-      }
-      value
-    }
-    recipient
-    referralFee
-    endTimestamp
-  }
-  ... on UnknownCollectModuleSettings {
-    type
-    contractAddress
-    collectModuleReturnData
-  }
-}
-
-fragment ReferenceModuleFields on ReferenceModule {
-  ... on FollowOnlyReferenceModuleSettings {
-    type
-    contractAddress
-  }
-  ... on UnknownReferenceModuleSettings {
-    type
-    contractAddress
-    referenceModuleReturnData
-  }
-  ... on DegreesOfSeparationReferenceModuleSettings {
-    type
-    contractAddress
-    commentsRestricted
-    mirrorsRestricted
-    degreesOfSeparation
-  }
-}
+${mediaFieldsFragment}
+${profileFieldsFragment}
+${postFieldsFragment}
+${publicationStatsFragment}
+${metadataOutputFragment}
+${erc20Fragment}
+${mirrorBaseFieldsFragment}
+${mirrorFieldsFragment}
+${commentBaseFieldsFragment}
+${commentFieldsFragment}
+${commentMirrorOfFieldsFragment}
+${followModuleFragment}
+${collectModuleFragment}
+${referenceModuleFragment}
 `
 
 const GET_POST_COMMENTS = gql`
@@ -486,88 +144,20 @@ query Publications($publicationsRequest: PublicationsQueryRequest!) {
     }
     }
   }
-fragment MediaFields on Media {
-  url
-  mimeType
-}
-
-fragment MetadataOutputFields on MetadataOutput {
-  name
-  description
-  content
-  media {
-    original {
-      ...MediaFields
-    }
-  }
-  attributes {
-    displayType
-    traitType
-    value
-  }
-}
-
-fragment CommentBaseFields on Comment {
-  id
-  createdAt
-  appId
-  hidden
-  reaction(request: null)
-  mirrors(by: null)
-  hasCollectedByMe
-  profile {
-    ...ProfileFields
-  }
-  metadata {
-    ...MetadataOutputFields
-  }
-  stats {
-    ...PublicationStatsFields
-  }
-
-}
-
-fragment PublicationStatsFields on PublicationStats { 
-  totalAmountOfMirrors
-  totalAmountOfCollects
-  totalAmountOfComments
-  totalUpvotes
-}
-
-fragment CommentFields on Comment {
-  ...CommentBaseFields
-
-}
-
-fragment ProfileFields on Profile {
-  id
-  name
-  handle
-  bio
-  ownedBy
-  isFollowedByMe
-  stats {
-    totalFollowers
-    totalFollowing
-  }
-  attributes {
-    key
-    value
-  }
-  picture {
-    ... on MediaSet {
-      original {
-        url
-      }
-    }
-    ... on NftImage {
-      uri
-    }
-  }
-  followModule {
-    __typename
-  }
-}
+${mediaFieldsFragment}
+${commentMirrorOfFieldsFragment}
+${erc20Fragment}
+${mirrorBaseFieldsFragment}
+${metadataOutputFragment}
+${commentBaseFieldsFragment}
+${publicationStatsFragment}
+${commentFieldsFragment}
+${mirrorBaseFieldsFragment}
+${profileFieldsFragment}
+${postFieldsFragment}
+${followModuleFragment}
+${referenceModuleFragment}
+${collectModuleFragment}
 `
 
 const HAS_TX_HASH_BEEN_INDEXED = gql`
@@ -644,13 +234,52 @@ const HAS_TX_HASH_BEEN_INDEXED = gql`
       }
     }
   }
-
 `
+
+const GET_TAGS = gql`
+  query Search($request: SearchQueryRequest!) {
+    search(request: $request)
+      {
+      ... on PublicationSearchResult {
+         __typename 
+        items {
+          ... on Post {
+            ...PostFields
+          }
+          ... on Comment {
+            ...CommentFields
+          }
+        }
+        pageInfo {
+          prev
+          totalCount
+          next
+        }
+      }
+    }
+  }
+  ${mediaFieldsFragment}
+  ${mirrorBaseFieldsFragment}
+  ${profileFieldsFragment}
+  ${publicationStatsFragment}
+  ${metadataOutputFragment}
+  ${postFieldsFragment}
+  ${erc20Fragment}
+  ${commentBaseFieldsFragment}
+  ${commentFieldsFragment}
+  ${commentMirrorOfFieldsFragment}
+  ${followModuleFragment}
+  ${collectModuleFragment}
+  ${referenceModuleFragment}
+`
+
+
 
 export {
   QUERY_PROFILE_BY_ID,
   GET_PUBLICATIONS_QUERY,
   GET_SINGLE_POST,
   GET_POST_COMMENTS,
-  HAS_TX_HASH_BEEN_INDEXED
+  HAS_TX_HASH_BEEN_INDEXED,
+  GET_TAGS
 }

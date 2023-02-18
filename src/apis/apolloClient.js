@@ -4,13 +4,14 @@ import {
     GET_PUBLICATIONS_QUERY,
     GET_SINGLE_POST,
     GET_POST_COMMENTS,
-    HAS_TX_HASH_BEEN_INDEXED
+    HAS_TX_HASH_BEEN_INDEXED,
+    GET_TAGS
 } from './queries';
 import { REFRESH_TOKEN_MUTATION, CREATE_POST_TYPED_DATA } from './mutations';
 import fetch from 'cross-fetch';
 
-// https://api.lens.dev
 const API_URL = 'https://api-mumbai.lens.dev'
+//const API_URL = 'https://api.lens.dev'
 
 // `httpLink` our gateway to the Lens GraphQL API. It lets us request for data from the API and passes it forward
 const httpLink = new HttpLink({ uri: API_URL, fetch });
@@ -111,10 +112,18 @@ const getComments = async (id) => {
             publicationsRequest: { commentsOf: id, limit: 10 }
         }
     });
-    //console.log(data.publications.items)
     return data.publications.items;
 };
 
+const getTags = async (query) => {
+    const { data } = await client.query({
+        query: GET_TAGS,
+        variables: {
+            request: { query: query, type: 'PUBLICATION', limit: 10}
+        }
+    });
+    return data.search.items;
+};
 export {
     // QUERIES
     getProfile,
@@ -122,6 +131,7 @@ export {
     getPublication,
     getComments,
     hasTxHashBeenIndexed,
+    getTags,
     // MUTATIONS
     refresh,
     createPostTypedData

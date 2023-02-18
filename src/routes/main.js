@@ -2,7 +2,7 @@ import moment from 'moment'
 import linkifyHtml from "linkify-html";
 import 'linkify-plugin-hashtag'
 import 'linkify-plugin-mention'
-import { getProfile, getPublications, getPublication, getComments } from '../apis/apolloClient'
+import { getProfile, getPublications, getPublication, getComments, getTags } from '../apis/apolloClient'
 import { getCleanedProfile, text_truncate } from '../utils';
 import { authenticate } from '../middlewares/authenticate'
 
@@ -16,14 +16,14 @@ import { Lens } from 'lens-protocol';
 // 2. add "connected: true" to "res.render" options
 
 export default router => {
-	router.get('/', authenticate, async (req, res) => {
+	router.get('/', async (req, res) => {
 		const data = await getPublications();
 		res.render('index', {
 			articles: data,
 			moment: moment,
 			linkifyHtml: linkifyHtml,
 			text_truncate: text_truncate,
-			connected: true
+			//connected: true
 		})
 	});
 
@@ -34,6 +34,21 @@ export default router => {
 		if (data && data.profile) {
 			const profileData = getCleanedProfile(data.profile);
 			res.render('profile', { user: profileData });
+		} else {
+			res.status(404).render('common/404');
+		}
+	})
+
+	router.get('/hashtag/:name', async (req, res) => {
+		const name = req.params.name;
+		const data = await getTags(name);
+		if (data) {
+			res.render('hashtag', { 
+				articles: data,
+				moment: moment,
+				linkifyHtml: linkifyHtml,
+				text_truncate: text_truncate
+			});
 		} else {
 			res.status(404).render('common/404');
 		}
