@@ -6,8 +6,8 @@
  * - browser extension: https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn/related?hl=en
  */
 
-// const LENS_API = 'https://api.lens.dev'
-const LENS_API = 'https://api-mumbai.lens.dev'
+const LENS_API = 'https://api.lens.dev'
+//const LENS_API = 'https://api-mumbai.lens.dev'
 
 window.onload = () => {
   setTimeout(() => {

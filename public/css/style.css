@@ -1105,7 +1105,7 @@ input:focus {
 
 .inner-body-wrapper {
   padding: 0 15px;
-  border-bottom: 1px solid #e6ecf0;
+  /*border-bottom: 1px solid #e6ecf0;*/
 }
 
 .middle-header-content {
@@ -1142,12 +1142,13 @@ input:focus {
   margin-bottom: 10px;
   word-break: break-word;
   color: #111;
+  padding: 2px 15px;
 }
 
 .post-link {
-  margin: 15px 0;
+  margin: 10px 15px;
   font-size: 15px;
-  color: #657786;
+  color: rgb(83, 100, 113);
 }
 
 .post-link a {
@@ -1209,7 +1210,7 @@ input:focus {
 .post-image-wrapper {
   overflow: hidden;
   max-height: 730px;
-  margin-top: 10px;
+  margin: 10px 15px 1px 15px;
 }
 
 .post-image-wrapper div {
@@ -4513,3 +4514,4 @@ body.dark_mode .reward_pool {
   margin-bottom: 10px;
   border-bottom: 1px solid #e6ecf0;
 }
+#reply-input{font-family: "Assistant", sans-serif;}

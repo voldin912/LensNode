@@ -10,8 +10,8 @@ import {
 import { REFRESH_TOKEN_MUTATION, CREATE_POST_TYPED_DATA } from './mutations';
 import fetch from 'cross-fetch';
 
-const API_URL = 'https://api-mumbai.lens.dev'
-//const API_URL = 'https://api.lens.dev'
+//const API_URL = 'https://api-mumbai.lens.dev'
+const API_URL = 'https://api.lens.dev'
 
 // `httpLink` our gateway to the Lens GraphQL API. It lets us request for data from the API and passes it forward
 const httpLink = new HttpLink({ uri: API_URL, fetch });
@@ -109,7 +109,7 @@ const getComments = async (id) => {
     const { data } = await client.query({
         query: GET_POST_COMMENTS,
         variables: {
-            publicationsRequest: { commentsOf: id, limit: 10 }
+            publicationsRequest: { commentsOf: id, limit: 50 }
         }
     });
     return data.publications.items;

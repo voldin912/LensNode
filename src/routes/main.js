@@ -5,18 +5,14 @@ import 'linkify-plugin-mention'
 import { getProfile, getPublications, getPublication, getComments, getTags } from '../apis/apolloClient'
 import { getCleanedProfile, text_truncate } from '../utils';
 import { authenticate } from '../middlewares/authenticate'
-
-
 import { Lens } from 'lens-protocol';
-
-
 
 // all you need to do now to protect any route and make use of it inside of ejs part:
 // 1. add "authenticate" as a middleware for your route
 // 2. add "connected: true" to "res.render" options
 
 export default router => {
-	router.get('/', async (req, res) => {
+	router.get('/' , async (req, res) => {
 		const data = await getPublications();
 		res.render('index', {
 			articles: data,
